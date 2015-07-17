@@ -1,0 +1,3 @@
+RewriteEngine On
+# allow access only indexes folders
+Options -Indexes

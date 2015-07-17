@@ -1,0 +1,26 @@
+{
+  "name": "indexed-db",
+  "version": "0.0.0",
+  "authors": [
+    "Fernando Palacios Landi <fernandopalacioslandi@gmail.com>"
+  ],
+  "description": "crete a example for indexed db",
+  "main": "index.html",
+  "keywords": [
+    "indexed-db",
+    "materialize"
+  ],
+  "license": "MIT",
+  "homepage": "http://www.cruzalosdedos.es/indexed-db",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "materialize": "~0.97.0"
+  }
+}

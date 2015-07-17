@@ -1,9 +1,11 @@
 ;(function ($, w) {
     'use strict';
     
-    w.IndexedDB = function (dbName) {
+    w.IndexedDB = function (dbName, status) {
         this.IDB = this.shimIndexedDb();
         this.dbName = dbName;
+        this.status = status;
+        this.activeIDB = null;
     };
     
     /**
@@ -22,13 +24,20 @@
      * Some native IndexedDB implemenatations are very buggy or poorly features.
      */
     w.IndexedDB.prototype.forceDhimIndexedDb = function () {
-        window.shimIndexedDB.__useShim();
+        w.shimIndexedDB.__useShim();
     };
     
     /**
      * Open Stored database, or create new one
      */
     w.IndexedDB.prototype.openDataBase = function () {
-        this.IDB.open(this.dbName);
+        this.activeIDB = this.IDB.open(this.dbName, this.status);
+    };
+    
+    /**
+     * Retrieve the identifier of our Database opened
+     */
+    w.IndexedDB.prototype.getActiveIDB = function () {
+        return this.activeIDB;
     };
 }(jQuery, window));

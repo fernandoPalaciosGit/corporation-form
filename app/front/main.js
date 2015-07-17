@@ -2,10 +2,14 @@
     'use strict';
     
     var APP = {
-        indexedBD : new IndexedDB('object')
+        indexedBD : new IndexedDB('object', 1)
     };
     
     $(d).ready(function () {
-        APP.indexedBD.openDataBase();
+        var indexedBD = APP.indexedBD,
+            activeDB;
+            
+        indexedBD.openDataBase();
+        activeDB = indexedBD.getActiveIDB();
     });
 }(jQuery, window, document, IndexedDB));

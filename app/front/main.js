@@ -1,7 +1,11 @@
-;(function ($, w, d) {
+;(function ($, w, d, IndexedDB) {
     'use strict';
     
+    var APP = {
+        indexedBD : new IndexedDB('object')
+    };
+    
     $(d).ready(function () {
-        console.log('Ready to fight.');
+        APP.indexedBD.openDataBase();
     });
-}(jQuery, document));
+}(jQuery, window, document, IndexedDB));

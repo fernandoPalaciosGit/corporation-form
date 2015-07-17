@@ -26,7 +26,6 @@
     "maxcomplexity": 5, // cyclomatic complexity
     "maxdepth": 3, // nested blocks
     "maxstatements": 10, // max number of function statements per scope
-    "maxparams": 3,
     "noarg": true,
 
     // ENVIRONMENT
@@ -35,7 +34,7 @@
     // define readonly variables
     "globals": {
         "console": false,
-        "Materialize": false,
-        "APP": false 
+        "APP": false,
+        "IndexedDB": false
     }
 }

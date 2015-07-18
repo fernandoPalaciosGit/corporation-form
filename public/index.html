@@ -33,19 +33,31 @@
         <form class="js-form-new-member" action="#">
             <div class="row">
                 <div class="input-field col s12 m17 l6">
-                    <input  placeholder="Personal name" type="text"
-                            pattern="[a-zA-Z\s]{4,}" required="required"
+                    <input  type="text" pattern="[a-zA-Z\s]{4,}" required="required"
                             data-msg-validation="nameInput"
-                            class="validate js-control-team-name" id="name">
-                    <label for="name" class="active">New team member</label>
+                            class="validate js-control-form js-control-team-name" id="name">
+                    <label for="name" class="active">Team member name</label>
                 </div>
                 
                 <div class="input-field col s12 m15 l6">
-                    <input  placeholder="Identification code" type="text"
-                            pattern="[a-zA-Z0-9_-\s]+" required="required"
+                    <input  type="text" pattern="[a-zA-Z0-9_-\s]+" required="required"
                             data-msg-validation="dniInput"
-                            class="validate js-control-team-dni" id="dni">
-                    <label for="name" class="active">Identification</label>
+                            class="validate js-control-form js-control-team-dni" id="dni">
+                    <label for="dni" class="active">Identification code</label>
+                </div>                
+            </div>
+            
+            <div class="row">
+                <div class="input-field col s12 m17 l6">
+                    <input  type="text" required="required" data-msg-validation="chargeInput"
+                            class="validate js-control-form js-control-team-charge" id="charge">
+                    <label for="charge" class="active">Position into company</label>
+                </div>
+                
+                <div class="input-field col s12 m15 l6">
+                    <input  id="birthdate" type="date"
+                            class="datepicker js-control-form js-control-team-birthdate">
+                    <label for="birthdate" class="active">Birthday</label>
                 </div>                
             </div>
             

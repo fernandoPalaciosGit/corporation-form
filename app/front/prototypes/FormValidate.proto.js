@@ -13,7 +13,13 @@
         'dniInput': {
             valueMissing: 'Fill Dni member.',
             patternMismatch: 'DNI Invalid characters.'
-        },     
+        },
+        'chargeInput': {
+            valueMissing: 'Fill Charge into Direlink.',
+        },
+        'birthdate': {
+            text: 'Birtdate not correct.',
+        },
         'dni': {
             text : 'Dni Not real.'
         }
@@ -55,7 +61,7 @@
         isValid = this.$form.get(0).checkValidity();
         
         if (!isValid) {
-            this.$form.find(':input').each($.proxy(function(index, input) {
+            this.$form.find('.js-control-form').each($.proxy(function(index, input) {
                 !input.validity.valid && this.ValidityState(input);
             }, this));
         }
@@ -92,6 +98,15 @@
         
         !isValid && this.changeInputDomState($dni, 'invalid', 'dni', 'text');
         return isValid;
+    };
+    
+    w.FormValidation.prototype.checkBirthDateUI = function (s) {
+        var $birthdate = this.$form.find(s),
+            $birthdateVal = $birthdate.val().trim(),
+            isValid = ($birthdateVal.length > 0) ? true : false;    
+        
+        !isValid && this.changeInputDomState($birthdate, 'invalid', 'birthdate', 'text');
+        return isValid;        
     };
     
     w.FormValidation.prototype.changeInputDomState = function ($input, domState, msgIndex, msgtate) {

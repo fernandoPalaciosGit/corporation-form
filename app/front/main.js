@@ -2,7 +2,7 @@
     'use strict';
     
     var APP = {
-        indexedBD : new IndexedDB(),
+        localDB : new IndexedDB(),
         formWidget : new FormValidation(
             '.js-form-new-member',
             '#modal-error-widget',
@@ -10,13 +10,24 @@
     };
     
     $(d).ready(function () {
-        var indexedBD = APP.indexedBD, connDB,
+        // load widget controls
+        $('.datepicker').pickadate({
+            selectMonths: true,
+            selectYears: 50,
+            editable: false,
+            formatSubmit: 'dd mmmm, yyyy',
+            max: new Date()
+        });
+    });
+    
+    $(w).load(function () {
+        var localDB = APP.localDB, connDB,
             formWidget = APP.formWidget;
-                    
+             
         // open Local DB
-        indexedBD.selectDB('corporation', 1);
-        indexedBD.openDataBase();
-        connDB = indexedBD.getConnection();
+        localDB.selectDB('corporation', 1);
+        localDB.openDataBase();
+        connDB = localDB.getConnection();
         
         /**
          * ON First creation Database or change version
@@ -24,10 +35,12 @@
          */
         connDB.onupgradeneeded = function () {
             // create document
-            indexedBD.createDocument('teamMembers');
+            localDB.createDocument('teamMembers');
             // indexed columns
-            indexedBD.createIndex('teamMembers', ['idx_name', 'name', {unique: false}]);
-            indexedBD.createIndex('teamMembers', ['idx_dni', 'dni', {unique: true}]);
+            localDB.createIndex('teamMembers', ['idx_dni', 'dni', {unique: true}]);
+            localDB.createIndex('teamMembers', ['idx_name', 'name', {unique: false}]);
+            localDB.createIndex('teamMembers', ['idx_charge', 'charge', {unique: false}]);
+            localDB.createIndex('teamMembers', ['idx_birthdate', 'birthdate', {unique: false}]);
         };
         
         /**
@@ -41,7 +54,7 @@
          * on open database error connection
          */
         connDB.onerror = function () {  
-            console.info('Error connection ´corporation´ database');
+            console.error('Error connection -> ', this.error.name, this.error.message);
         };
         
         formWidget.$form
@@ -52,16 +65,18 @@
                 formWidget.setCustomMsg(null);
                 // BUG succesive Enter @ https://github.com/Dogfalo/materialize/issues/1647
                 $('.lean-overlay').remove();
+                formWidget.$form.find(':input').removeClass('invalid');
                                 
                 if (formWidget.nativeValidate() &&
-                    formWidget.checkDni('.js-control-team-dni')) { // more validations with single &
-                    var today = new Date(),
-                        optionsNewMember = {
+                    formWidget.checkDni('.js-control-team-dni') &
+                    formWidget.checkBirthDateUI('.js-control-team-birthdate')) {
+                    var optionsNewMember = {
                             dni: formWidget.$form.find('.js-control-team-dni').val(),
                             name: formWidget.$form.find('.js-control-team-name').val(),
-                            dischargeDate: today.toJSON().split('T')[0]
+                            birthdate: formWidget.$form.find('.js-control-team-charge').val(),
+                            charge: formWidget.$form.find('.js-control-team-birthdate').val()
                         },
-                        transaction = indexedBD.getActiveDb().transaction('teamMembers', 'readwrite'),
+                        transaction = localDB.getActiveDb().transaction('teamMembers', 'readwrite'),
                         putRequest = transaction.objectStore('teamMembers').put(optionsNewMember);
                     
                     putRequest.onerror = function () {

@@ -17,6 +17,7 @@
         this.version = null;
         // DB params
         this.activeDB = null;
+        this.activeDocuments = [];
     };
     
     /**
@@ -53,6 +54,21 @@
         this.activeDB = this.IDB.open(this.dbName, this.version);
     };
     
+    
+    w.IndexedDB.prototype.createDocument = function (docName) {
+        var indexDoc = Documents[docName],
+            activeDoc = this.activeDB.result.createObjectStore(indexDoc.name, indexDoc.options);
+        
+        this.activeDocuments[indexDoc.name] = activeDoc;
+    };
+    
+    w.IndexedDB.prototype.createIndex = function (docName, docOpt) {
+        var indexDoc = Documents[docName],
+            activeDoc = this.activeDocuments[indexDoc.name];
+        
+        activeDoc.createIndex.apply(activeDoc, docOpt); 
+    };
+    
     /**
      * Retrieve the identifier of our Database opened
      */
@@ -63,7 +79,9 @@
     /**
      * Select documents Data stored into dictionary
      */
-    w.IndexedDB.prototype.getDocument = function (docIndex) {
-      return Documents[docIndex];
+    w.IndexedDB.prototype.getDocument = function (docName) {
+        var indexDoc = Documents[docName];
+        
+        return this.activeDocuments[indexDoc.name];
     };
 }(jQuery, window));

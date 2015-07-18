@@ -9,18 +9,22 @@
     $(d).ready(function () {
         var indexedBD = APP.indexedBD,
             connDB = APP.connDB;
-            
-        indexedBD.selectDB('object', 3);
+        
+        // open Local DB
+        indexedBD.selectDB('corporation', 1);
         indexedBD.openDataBase();
         connDB = indexedBD.getConnection();
         
         /**
          * ON First creation Database or change version
-         * Store document
+         * Create Documents and index columns
          */
-        connDB.onupgradeneeded = function (evChangeDB) {
-            var peopleDoc = indexedBD.getDocument('people');
-            this.result.createObjectStore(peopleDoc.name, peopleDoc.options);
+        connDB.onupgradeneeded = function () {
+            // create document
+            indexedBD.createDocument('people');
+            // indexed columns
+            indexedBD.createIndex('people', ['by_name', 'name', {unique: false}]);
+            indexedBD.createIndex('people', ['by_dni', 'dni', {unique: true}]);
         };
         
         /**

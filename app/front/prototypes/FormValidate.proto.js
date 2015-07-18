@@ -1,10 +1,14 @@
 ;(function ($, w, d) {
     'use strict';
     
+    /**
+     * Error messages hashtable
+     * Input key´s messages correspond with ElementInput@ValidityState
+     */
     var messagesValidation = {
         'nameInput': {
             valueMissing: 'Fill Team member name.',
-            patternMismatch: 'Name members least 4 letters, no digits.'
+            patternMismatch: 'Name members at least 4 letters and no digits.'
         },     
         'dniInput': {
             valueMissing: 'Fill Dni member.',
@@ -15,16 +19,13 @@
         }
     };
      
-    w.FormValidation = function (f, n, d, m, tm) {
+    w.FormValidation = function (f, m, tm) {
         this.$form = $(f);
-        this.$memberName = this.$form.find(n);
-        this.$memberDni = this.$form.find(d);
         this.$triggerWidget = $(tm);
         this.$modalWidget = $(m);
-        
+
         this.$triggerWidget.leanModal({
-          dismissible: true,
-          opacity: 0.5,
+          dismissible: false,
           in_duration: 300,
           out_duration: 200
         });
@@ -52,41 +53,50 @@
         var isValid = false;
         
         isValid = this.$form.get(0).checkValidity();
+        
         if (!isValid) {
-            !this.$memberName.get(0).validity.valid && this.ValidityState(this.$memberName);
-            !this.$memberDni.get(0).validity.valid && this.ValidityState(this.$memberDni);
+            this.$form.find(':input').each($.proxy(function(index, input) {
+                !input.validity.valid && this.ValidityState(input);
+            }, this));
         }
+        
         return isValid;
     };
     
-    w.FormValidation.prototype.ValidityState = function ($input) {
-        var validityState = $input.get(0).validity,
-            dataMsg = $input.data('msgValidation');
+    w.FormValidation.prototype.ValidityState = function (input) {
+        var validityState = input.validity,
+            dataMsgIndex = input.dataset.msgValidation;
         
         for ( var state in validityState) {
-            if (validityState[state] === true && !!messagesValidation[dataMsg]) {
-                // log invalid messages : console.log(dataMsg, state);
-                this.setCustomMsg(messagesValidation[dataMsg][state]);
+            if (validityState[state] === true && !!messagesValidation[dataMsgIndex]) {
+                // log invalid messages : console.log(dataMsgIndex, state);
+                this.changeInputDomState($(input), 'invalid', dataMsgIndex, state);
             }
         }
     };
     
-    w.FormValidation.prototype.checkDni = function () {
+    w.FormValidation.prototype.checkDni = function (s) {
         var numero, letra, letraControl,
-            dni = this.$memberDni.val().trim(),
-            dniRegex = /^[XYZ]?\d{5,8}[A-Z]$/,
+            $dni = this.$form.find(s),
+            dniName = $dni.val().trim(),
             isValid = false;
 
-        if (dniRegex.test(dni)) {
-            numero = dni.substr(0,dni.length-1);
+        if (/^[XYZ]?\d{5,8}[A-Z]$/.test(dniName)) {
+            numero = dniName.substr(0,dniName.length-1);
             numero = numero.replace('X', 0).replace('Y', 1).replace('Z', 2);
             numero = numero % 23;
-            letra = dni.substr(dni.length-1, 1);
+            letra = dniName.substr(dniName.length-1, 1);
             letraControl = 'TRWAGMYFPDXBNJZSQVHLCKET'.substring(numero, numero+1);            
             isValid = (letraControl !== letra) ? false : true;
         }
         
-        !isValid && this.setCustomMsg(messagesValidation['dni'].text);
+        !isValid && this.changeInputDomState($dni, 'invalid', 'dni', 'text');
         return isValid;
     };
+    
+    w.FormValidation.prototype.changeInputDomState = function ($input, domState, msgIndex, msgtate) {
+        $input.addClass(domState);
+        this.setCustomMsg(messagesValidation[msgIndex][msgtate]);
+    };
+    
 }(jQuery, window, document));

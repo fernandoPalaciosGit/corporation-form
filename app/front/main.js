@@ -5,8 +5,6 @@
         indexedBD : new IndexedDB(),
         formWidget : new FormValidation(
             '.js-form-new-member',
-            '.js-control-team-name',
-            '.js-control-dni-name',
             '#modal-error-widget',
             '.js-modal-error-trigger' )
     };
@@ -48,13 +46,15 @@
         
         formWidget.$form
             .on('submit', function (ev) {
-                ev.preventDefault();
+                ev.preventDefault(); // prevent redirect
             })
-            .on('click', ':submit', function () {
+            .on('click', ':submit', function (ev) {
                 formWidget.setCustomMsg(null);
+                // BUG succesive Enter @ https://github.com/Dogfalo/materialize/issues/1647
+                $('.lean-overlay').remove();
                                 
                 if (formWidget.nativeValidate() &&
-                    formWidget.checkDni()) { // more validations with single &
+                    formWidget.checkDni('.js-control-dni-name')) { // more validations with single &
                     var activeDb = indexedBD.getActiveDb();
                 
                     formWidget.reset();
@@ -65,7 +65,7 @@
                 }
             })
             .find(':input').on('invalid', function (ev) {
-                ev.preventDefault();
+                ev.preventDefault(); // prevent show mesage native validity
             });
     });
 }(jQuery, window, document, IndexedDB, FormValidation));

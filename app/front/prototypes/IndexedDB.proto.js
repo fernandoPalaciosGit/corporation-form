@@ -1,6 +1,9 @@
 ;(function ($, w) {
     'use strict';
     
+    /**
+     * Indexed DB options Databes required
+     */
     var DocumentsData = {
         'people' : {
             name : 'people',

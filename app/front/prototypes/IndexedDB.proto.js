@@ -1,11 +1,30 @@
 ;(function ($, w) {
     'use strict';
     
-    w.IndexedDB = function (dbName, status) {
+    var Documents = {
+        'people' : {
+            name : 'people',
+            options: {
+                keypath: 'id',
+                autoIncrement: true
+            }
+        }
+    };
+    
+    w.IndexedDB = function () {
         this.IDB = this.shimIndexedDb();
+        this.dbName = null;
+        this.version = null;
+        // DB params
+        this.activeDB = null;
+    };
+    
+    /**
+     * rename Database 
+     */
+    w.IndexedDB.prototype.selectDB = function (dbName, version) {
         this.dbName = dbName;
-        this.status = status;
-        this.activeIDB = null;
+        this.version = version;
     };
     
     /**
@@ -31,13 +50,20 @@
      * Open Stored database, or create new one
      */
     w.IndexedDB.prototype.openDataBase = function () {
-        this.activeIDB = this.IDB.open(this.dbName, this.status);
+        this.activeDB = this.IDB.open(this.dbName, this.version);
     };
     
     /**
      * Retrieve the identifier of our Database opened
      */
-    w.IndexedDB.prototype.getActiveIDB = function () {
-        return this.activeIDB;
+    w.IndexedDB.prototype.getConnection = function () {
+        return this.activeDB;
+    };
+    
+    /**
+     * Select documents Data stored into dictionary
+     */
+    w.IndexedDB.prototype.getDocument = function (docIndex) {
+      return Documents[docIndex];
     };
 }(jQuery, window));

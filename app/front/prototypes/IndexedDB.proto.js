@@ -5,8 +5,8 @@
      * Indexed DB options Databes required
      */
     var DocumentsData = {
-        'people' : {
-            name : 'people',
+        'teamMembers' : {
+            name : 'teamMembers',
             options: {
                 keypath: 'id',
                 autoIncrement: true

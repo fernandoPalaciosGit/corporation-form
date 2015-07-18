@@ -69,7 +69,7 @@
         
         for ( var state in validityState) {
             if (validityState[state] === true && !!messagesValidation[dataMsgIndex]) {
-                // log invalid messages : console.log(dataMsgIndex, state);
+                // log invalid messages : console.info(dataMsgIndex, state);
                 this.changeInputDomState($(input), 'invalid', dataMsgIndex, state);
             }
         }

@@ -3,9 +3,10 @@
 <head>
     <meta charset='UTF-8'>
     <title>Indexded db : database in html5</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src='./../bower_components/jquery/dist/jquery.min.js'></script>
     <script src='./../bower_components/IndexedDBShim/dist/indexeddbshim.min.js'></script>
-    <link rel='stylesheet' href='./../bower_components\materialize\dist\css\materialize.min.css'>
+    <link rel='stylesheet' href='./../bower_components/materialize/dist/css/materialize.min.css'>
     <style>
         .text-size-h4 {
             font-size: 2.28rem;
@@ -43,7 +44,7 @@
                     <input  placeholder="Identification code" type="text"
                             pattern="[a-zA-Z0-9_-\s]+" required="required"
                             data-msg-validation="dniInput"
-                            class="validate js-control-dni-name" id="dni">
+                            class="validate js-control-team-dni" id="dni">
                     <label for="name" class="active">Identification</label>
                 </div>                
             </div>
@@ -67,7 +68,7 @@
                     <thead>
                       <tr>
                           <th data-field="id">Name</th>
-                          <th data-field="name">Dni</th>
+                          <th data-field="name">Dni <i class="teal-text text-lighten-1 material-icons tiny">grade</i></th>
                           <th data-field="price">Update date</th>
                       </tr>
                     </thead>

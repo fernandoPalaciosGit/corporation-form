@@ -36,6 +36,7 @@
         "console": false,
         "APP": false,
         "IndexedDB": false,
+        "Materialize": false,
         "FormValidation": false
     }
 }

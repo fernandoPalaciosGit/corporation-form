@@ -6,11 +6,100 @@
     <script src='./../bower_components/jquery/dist/jquery.min.js'></script>
     <script src='./../bower_components/IndexedDBShim/dist/indexeddbshim.min.js'></script>
     <link rel='stylesheet' href='./../bower_components\materialize\dist\css\materialize.min.css'>
+    <style>
+        .text-size-h4 {
+            font-size: 2.28rem;
+        }
+        
+        .text-size-h2 {
+            font-size: 3.56rem;
+        }
+        
+        .modal .modal-footer {
+          height: auto;
+        }
+    </style>
 </head>
 <body>
-    <h1>Console the results</h1>
+    
+    <div class="section">
+        <h1 class="center text-size-h2">Direlink Corporation</h1>
+    </div>
+    
+    <div class="section">
+        <h2 class="center text-size-h4 hide">Add new Team member</h2>
+        
+        <form class="js-form-new-member" action="#">
+            <div class="row">
+                <div class="input-field col s12 m17 l6">
+                    <input  placeholder="Personal name" type="text"
+                            pattern="[a-zA-Z\s]{4,}" required="required"
+                            data-msg-validation="nameInput"
+                            class="validate js-control-team-name" id="name">
+                    <label for="name" class="active">New team member</label>
+                </div>
+                
+                <div class="input-field col s12 m15 l6">
+                    <input  placeholder="Identification code" type="text"
+                            pattern="[a-zA-Z0-9_-\s]+" required="required"
+                            data-msg-validation="dniInput"
+                            class="validate js-control-dni-name" id="dni">
+                    <label for="name" class="active">Identification</label>
+                </div>                
+            </div>
+            
+            <div class="row">
+                <div class="input-field col s12 center-align">
+                    <input  class="btn" type="submit" value="Añadir"/>
+                </div>
+            </div>
+        </form>
+    </div>
+     
+    <div class="divider"></div>
+    
+    <div class="section">
+        <h2 class="center text-size-h4">Our Members</h2>
+        
+        <div class="row">
+            <div class="col s12 m12 l8 offset-l2">
+                <table class="striped centered">
+                    <thead>
+                      <tr>
+                          <th data-field="id">Name</th>
+                          <th data-field="name">Dni</th>
+                          <th data-field="price">Update date</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr data-indexeddb-index="0">
+                            <td>name</td>
+                            <td>dni</td>
+                            <td>Update date</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>    
+    </div>
+    
+    <!-- Modal Trigger -->
+    <a  class="waves-effect waves-light btn modal-trigger hide js-modal-error-trigger"
+        href="#modal-error-widget">Modal</a>
+
+    <!-- Modal Structure -->
+    <div id="modal-error-widget" class="modal bottom-sheet">
+        <div class="modal-content">
+            <h5>Errors in new member</h5>
+        </div>
+        <div class="modal-footer">
+            <ul class="collection list-errors"></ul>
+        </div>
+    </div>
     
     <script src='./../bower_components/materialize/dist/js/materialize.min.js'></script>
+    <script src='./../app/front/prototypes/FormValidate.proto.js'></script>
     <script src='./../app/front/prototypes/IndexedDB.proto.js'></script>
     <script src='./../app/front/main.js'></script>
 </body>

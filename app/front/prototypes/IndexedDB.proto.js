@@ -1,7 +1,7 @@
 ;(function ($, w) {
     'use strict';
     
-    var Documents = {
+    var DocumentsData = {
         'people' : {
             name : 'people',
             options: {
@@ -54,34 +54,31 @@
         this.activeDB = this.IDB.open(this.dbName, this.version);
     };
     
-    
     w.IndexedDB.prototype.createDocument = function (docName) {
-        var indexDoc = Documents[docName],
-            activeDoc = this.activeDB.result.createObjectStore(indexDoc.name, indexDoc.options);
-        
-        this.activeDocuments[indexDoc.name] = activeDoc;
+        var indexDoc = DocumentsData[docName],
+            activeDB = this.activeDB.result;
+            
+        this.activeDocuments[indexDoc.name] = activeDB.createObjectStore(indexDoc.name, indexDoc.options);
     };
     
     w.IndexedDB.prototype.createIndex = function (docName, docOpt) {
-        var indexDoc = Documents[docName],
+        var indexDoc = DocumentsData[docName],
             activeDoc = this.activeDocuments[indexDoc.name];
         
         activeDoc.createIndex.apply(activeDoc, docOpt); 
     };
     
     /**
-     * Retrieve the identifier of our Database opened
+     * Get Database opened for interface forconnections
      */
     w.IndexedDB.prototype.getConnection = function () {
         return this.activeDB;
     };
     
     /**
-     * Select documents Data stored into dictionary
+     * Get Database opened interface for DDL, DML
      */
-    w.IndexedDB.prototype.getDocument = function (docName) {
-        var indexDoc = Documents[docName];
-        
-        return this.activeDocuments[indexDoc.name];
+    w.IndexedDB.prototype.getActiveDb = function () {
+        return this.activeDB.result;
     };
 }(jQuery, window));

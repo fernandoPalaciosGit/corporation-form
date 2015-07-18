@@ -1,15 +1,20 @@
-;(function ($, w, d, IndexedDB) {
+;(function ($, w, d, IndexedDB, FormValidation) {
     'use strict';
     
     var APP = {
         indexedBD : new IndexedDB(),
-        connDB: null
+        formWidget : new FormValidation(
+            '.js-form-new-member',
+            '.js-control-team-name',
+            '.js-control-dni-name',
+            '#modal-error-widget',
+            '.js-modal-error-trigger' )
     };
     
     $(d).ready(function () {
-        var indexedBD = APP.indexedBD,
-            connDB = APP.connDB;
-        
+        var indexedBD = APP.indexedBD, connDB,
+            formWidget = APP.formWidget;
+                    
         // open Local DB
         indexedBD.selectDB('corporation', 1);
         indexedBD.openDataBase();
@@ -40,5 +45,27 @@
         connDB.onError = function () {  
             console.log(arguments);
         };
+        
+        formWidget.$form
+            .on('submit', function (ev) {
+                ev.preventDefault();
+            })
+            .on('click', ':submit', function () {
+                formWidget.setCustomMsg(null);
+                                
+                if (formWidget.nativeValidate() &&
+                    formWidget.checkDni()) { // more validations with single &
+                    var activeDb = indexedBD.getActiveDb();
+                
+                    formWidget.reset();
+                    console.dir(activeDb);
+                
+                } else {
+                    formWidget.$modalWidget.openModal();
+                }
+            })
+            .find(':input').on('invalid', function (ev) {
+                ev.preventDefault();
+            });
     });
-}(jQuery, window, document, IndexedDB));
+}(jQuery, window, document, IndexedDB, FormValidation));

@@ -35,6 +35,7 @@
     "globals": {
         "console": false,
         "APP": false,
-        "IndexedDB": false
+        "IndexedDB": false,
+        "FormValidation": false
     }
 }

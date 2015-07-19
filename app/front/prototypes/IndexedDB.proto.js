@@ -1,19 +1,6 @@
 ;(function ($, w) {
     'use strict';
-    
-    /**
-     * Indexed DB options Databes required
-     */
-    var DocumentsData = {
-        'teamMembers' : {
-            name : 'teamMembers',
-            options: {
-                keypath: 'id',
-                autoIncrement: true
-            }
-        }
-    };
-    
+            
     w.IndexedDB = function () {
         this.IDB = this.shimIndexedDb();
         this.dbName = null;
@@ -57,18 +44,20 @@
         this.activeDB = this.IDB.open(this.dbName, this.version);
     };
     
-    w.IndexedDB.prototype.createDocument = function (docName) {
-        var indexDoc = DocumentsData[docName],
-            activeDB = this.activeDB.result;
+    /**
+     * Create and store the active document 
+     * @param  {string} docName index from active documents database
+     */
+    w.IndexedDB.prototype.createDocument = function (docDb) {
+        var activeDB = this.activeDB.result;
             
-        this.activeDocuments[indexDoc.name] = activeDB.createObjectStore(indexDoc.name, indexDoc.options);
+        this.activeDocuments[docDb.name] = activeDB.createObjectStore(docDb.name, docDb.options);
     };
     
-    w.IndexedDB.prototype.createIndex = function (docName, docOpt) {
-        var indexDoc = DocumentsData[docName],
-            activeDoc = this.activeDocuments[indexDoc.name];
+    w.IndexedDB.prototype.createIndex = function (docDBName, fieldOptions) {
+        var activeDoc = this.activeDocuments[docDBName];
         
-        activeDoc.createIndex.apply(activeDoc, docOpt); 
+        activeDoc.createIndex.apply(activeDoc, fieldOptions); 
     };
     
     /**

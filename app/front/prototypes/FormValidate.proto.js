@@ -1,55 +1,24 @@
 ;(function ($, w, d) {
     'use strict';
-    
-    /**
-     * Error messages hashtable
-     * Input key´s messages correspond with ElementInput@ValidityState
-     */
-    var messagesValidation = {
-        'nameInput': {
-            valueMissing: 'Fill Team member name.',
-            patternMismatch: 'Name members at least 4 letters and no digits.'
-        },     
-        'dniInput': {
-            valueMissing: 'Fill Dni member.',
-            patternMismatch: 'DNI Invalid characters.'
-        },
-        'chargeInput': {
-            valueMissing: 'Fill Charge into Corporation.',
-        },
-        'birthdate': {
-            text: 'Birtdate not correct.',
-        },
-        'dni': {
-            text : 'Dni Not real.'
-        }
-    };
-     
-    w.FormValidation = function (f, m, tm) {
+             
+    w.FormValidation = function (f, m) {
         this.$form = $(f);
-        this.$triggerWidget = $(tm);
         this.$modalWidget = $(m);
-
-        this.$triggerWidget.leanModal({
-          dismissible: false,
-          in_duration: 300,
-          out_duration: 200
-        });
     };
     
     w.FormValidation.prototype.reset = function () {
         this.$form.get(0).reset();
     };
     
-    w.FormValidation.prototype.setCustomMsg = function (item) {
+    w.FormValidation.prototype.setCustomMsg = function (itemText) {
         var $erroList = this.$modalWidget.find('.list-errors');
-        if (item === null) {
+        if (itemText === null) {
             $erroList.empty();
             
-        } else if (!!item) {
+        } else if (!!itemText) {
             var itemList = d.createElement('li');
             
-            itemList.innerText = item;
+            itemList.innerText = itemText;
             itemList.classList.add('collection-item');
             $erroList.append(itemList);
         }
@@ -74,7 +43,7 @@
             dataMsgIndex = input.dataset.msgValidation;
         
         for ( var state in validityState) {
-            if (validityState[state] === true && !!messagesValidation[dataMsgIndex]) {
+            if (validityState[state] === true && !!this.messagesValidation[dataMsgIndex]) {
                 console.info('Native invalid --> ', dataMsgIndex, state);
                 this.changeInputDomState($(input), 'invalid', dataMsgIndex, state);
                 this.changeInputStyleState($(input), false);
@@ -114,7 +83,7 @@
     
     w.FormValidation.prototype.changeInputDomState = function ($input, domState, msgIndex, msgtate) {
         $input.addClass(domState);
-        this.setCustomMsg(messagesValidation[msgIndex][msgtate]);
+        this.setCustomMsg(this.messagesValidation[msgIndex][msgtate]);
     };
     
     /**
@@ -132,5 +101,9 @@
                 .toggleClass('invalid', !isValid)
                 .toggleClass('valid', isValid);
         }
+    };
+    
+    w.FormValidation.prototype.setFormMessages = function (msgVal) {
+        this.messagesValidation = msgVal;
     };
 }(jQuery, window, document));

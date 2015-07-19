@@ -25,7 +25,7 @@
     "strict": false, // avoid use stric mode ES5
     "maxcomplexity": 5, // cyclomatic complexity
     "maxdepth": 3, // nested blocks
-    "maxstatements": 10, // max number of function statements per scope
+    "maxstatements": 15, // max number of function statements per scope
     "noarg": true,
 
     // ENVIRONMENT
@@ -37,6 +37,7 @@
         "APP": false,
         "IndexedDB": false,
         "Materialize": false,
-        "FormValidation": false
+        "FormValidation": false,
+        "inserTeamMemberFactory": false
     }
 }

@@ -14,6 +14,14 @@
     border-bottom: 1px solid #F44336 !important;
 }
 
+.arrow-down {
+    transform: rotate(90deg);
+}
+
+.arrow-up {
+    transform: rotate(-90deg);
+}
+
 /* Issue Materialize : https://github.com/Dogfalo/materialize/issues/1390 */
 select.js-control-form.invalid ~ .select-dropdown {
     border-bottom: 1px solid #F44336;

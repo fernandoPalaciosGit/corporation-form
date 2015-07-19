@@ -34,7 +34,7 @@
                 <div class="input-field col s12 m15 l6">
                     <input  type="text" pattern="[a-zA-Z0-9_-\s]+" required="required"
                             data-msg-validation="dniInput"
-                            class="validate js-control-form js-control-team-dni" id="dni">
+                            class="js-control-form js-control-team-dni" id="dni">
                     <label for="dni" class="active">Identification code</label>
                 </div>                
             </div>
@@ -77,17 +77,17 @@
                     <thead>
                       <tr>
                           <th data-field="id">Name</th>
-                          <th data-field="name">Dni <i class="teal-text text-lighten-1 material-icons tiny">grade</i></th>
+                          <th data-field="name">Dni <i class="arrow-down teal-text text-lighten-1 material-icons tiny">play_arrow</i></th>
                           <th data-field="price">Update date</th>
                       </tr>
                     </thead>
 
                     <tbody>
-                        <tr data-indexeddb-index="0">
+                        <!-- <tr data-indexeddb-index="0">
                             <td>name</td>
                             <td>dni</td>
                             <td>Update date</td>
-                        </tr>
+                        </tr> -->
                     </tbody>
                 </table>
             </div>
@@ -111,6 +111,7 @@
     <script src='./../bower_components/materialize/dist/js/materialize.js'></script>
     <script src='./../app/front/prototypes/FormValidate.proto.js'></script>
     <script src='./../app/front/prototypes/IndexedDB.proto.js'></script>
+    <script src='./../app/front/widgets/insertTeamMember.widget.js'></script>
     <script src='./../app/front/main.js'></script>
 </body>
 </html>

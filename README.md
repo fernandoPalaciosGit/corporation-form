@@ -9,4 +9,8 @@ Form to Insert information of corporation members into **persistance database cl
 
 #### RESOURCES
 - [full tutorial](https://rolandocaldas.com/html5/indexeddb-tu-base-de-datos-local-en-html5)
-- [DEMO](http://www.cruzalosdedos.es/indexed-db/public/)
+- [DEMO](http://www.cruzalosdedos.es/corporation-form/public/)
+
+#### ISSUES
+- [Materialize : select is not applying validate style](https://github.com/Dogfalo/materialize/issues/1390)
+- [Materialize : Blocking window on succesive on open leanModal](https://github.com/Dogfalo/materialize/issues/1647)

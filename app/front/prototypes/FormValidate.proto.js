@@ -15,7 +15,7 @@
             patternMismatch: 'DNI Invalid characters.'
         },
         'chargeInput': {
-            valueMissing: 'Fill Charge into Direlink.',
+            valueMissing: 'Fill Charge into Corporation.',
         },
         'birthdate': {
             text: 'Birtdate not correct.',
@@ -61,7 +61,7 @@
         isValid = this.$form.get(0).checkValidity();
         
         if (!isValid) {
-            this.$form.find('.js-control-form').each($.proxy(function(index, input) {
+            this.$form.find('.js-control-form:input').each($.proxy(function(index, input) {
                 !input.validity.valid && this.ValidityState(input);
             }, this));
         }
@@ -75,8 +75,9 @@
         
         for ( var state in validityState) {
             if (validityState[state] === true && !!messagesValidation[dataMsgIndex]) {
-                // log invalid messages : console.info(dataMsgIndex, state);
+                console.info('Native invalid --> ', dataMsgIndex, state);
                 this.changeInputDomState($(input), 'invalid', dataMsgIndex, state);
+                this.changeInputStyleState($(input), false);
             }
         }
     };
@@ -97,6 +98,7 @@
         }
         
         !isValid && this.changeInputDomState($dni, 'invalid', 'dni', 'text');
+        this.changeInputStyleState($dni, isValid);
         return isValid;
     };
     
@@ -106,6 +108,7 @@
             isValid = ($birthdateVal.length > 0) ? true : false;    
         
         !isValid && this.changeInputDomState($birthdate, 'invalid', 'birthdate', 'text');
+        this.changeInputStyleState($birthdate, isValid);
         return isValid;        
     };
     
@@ -114,4 +117,20 @@
         this.setCustomMsg(messagesValidation[msgIndex][msgtate]);
     };
     
+    /**
+     * [changeInputStyleState description]
+     * @param  {jQuery, string} input form control
+     * @param  {Boolean, Null} isValid change style state by css class, null means disabled state
+     */
+    w.FormValidation.prototype.changeInputStyleState = function (input, isValid) {
+        var $input = (input instanceof $) ? input : this.$form.find(input);
+        
+        $input.removeClass('invalid valid');
+        
+        if (isValid !== null) {
+            $input
+                .toggleClass('invalid', !isValid)
+                .toggleClass('valid', isValid);
+        }
+    };
 }(jQuery, window, document));

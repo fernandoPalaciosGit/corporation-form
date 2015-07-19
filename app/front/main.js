@@ -18,6 +18,8 @@
             formatSubmit: 'dd mmmm, yyyy',
             max: new Date()
         });
+        
+        $('.js-control-team-charge').material_select();
     });
     
     $(w).load(function () {
@@ -63,11 +65,12 @@
             })
             .on('click', ':submit', function () {
                 formWidget.setCustomMsg(null);
-                // BUG succesive Enter @ https://github.com/Dogfalo/materialize/issues/1647
+                // Issue Materialize : https://github.com/Dogfalo/materialize/issues/1647
                 $('.lean-overlay').remove();
-                formWidget.$form.find(':input').removeClass('invalid');
-                                
-                if (formWidget.nativeValidate() &&
+                formWidget.changeInputStyleState('.js-control-form:input', true);
+                
+                // validate multiple input states
+                if (formWidget.nativeValidate() &
                     formWidget.checkDni('.js-control-team-dni') &
                     formWidget.checkBirthDateUI('.js-control-team-birthdate')) {
                     var optionsNewMember = {
@@ -86,6 +89,7 @@
                     
                     transaction.oncomplete = function () {
                         formWidget.reset();
+                        formWidget.changeInputStyleState('.js-control-form:input', null);
                         Materialize.toast('Added, new Member.', 3000, 'rounded');
                     };
                 

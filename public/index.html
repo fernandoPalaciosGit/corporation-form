@@ -6,25 +6,17 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src='./../bower_components/jquery/dist/jquery.min.js'></script>
     <script src='./../bower_components/IndexedDBShim/dist/indexeddbshim.min.js'></script>
+    <link rel='stylesheet' href='./../bower_components/github-fork-ribbon-css/gh-fork-ribbon.css'>
     <link rel='stylesheet' href='./../bower_components/materialize/dist/css/materialize.min.css'>
-    <style>
-        .text-size-h4 {
-            font-size: 2.28rem;
-        }
-        
-        .text-size-h2 {
-            font-size: 3.56rem;
-        }
-        
-        .modal .modal-footer {
-          height: auto;
-        }
-    </style>
+    <link rel='stylesheet' href='./../app/css/main.css'>
 </head>
-<body>
+<body>    
+    <div class="section">
+        <a href="https://github.com/fernandoPalaciosGit/corporation-form"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/82b228a3648bf44fc1163ef44c62fcc60081495e/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_red_aa0000.png"></a>
+    </div>
     
     <div class="section">
-        <h1 class="center text-size-h2">Direlink Corporation</h1>
+        <h1 class="center text-size-h2">Team Member Corporation</h1>
     </div>
     
     <div class="section">
@@ -49,9 +41,14 @@
             
             <div class="row">
                 <div class="input-field col s12 m17 l6">
-                    <input  type="text" required="required" data-msg-validation="chargeInput"
-                            class="validate js-control-form js-control-team-charge" id="charge">
-                    <label for="charge" class="active">Position into company</label>
+                    <select class="validate js-control-form js-control-team-charge"
+                            data-msg-validation="chargeInput" required="required" id="charge">
+                        <option value="" disabled selected>Position into company</option>
+                        <option value="1">Web software ingenieering</option>
+                        <option value="2">Business management</option>
+                        <option value="3">Ecommerce management</option>
+                    </select>
+                    <label for="charge" class="active hide">Position into company</label>
                 </div>
                 
                 <div class="input-field col s12 m15 l6">
@@ -111,7 +108,7 @@
         </div>
     </div>
     
-    <script src='./../bower_components/materialize/dist/js/materialize.min.js'></script>
+    <script src='./../bower_components/materialize/dist/js/materialize.js'></script>
     <script src='./../app/front/prototypes/FormValidate.proto.js'></script>
     <script src='./../app/front/prototypes/IndexedDB.proto.js'></script>
     <script src='./../app/front/main.js'></script>

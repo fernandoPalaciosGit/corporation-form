@@ -61,13 +61,6 @@
     };
     
     /**
-     * Get Database opened for interface forconnections
-     */
-    w.IndexedDB.prototype.getConnection = function () {
-        return this.activeDB;
-    };
-    
-    /**
      * Get Database opened interface for DDL, DML
      */
     w.IndexedDB.prototype.getActiveDb = function () {
@@ -76,7 +69,7 @@
     
     w.IndexedDB.prototype.loadIndexedDBData = function (docDB, accessType) {
         var defer = $.Deferred(),
-            transaction = this.activeDB.result.transaction([docDB], accessType),
+            transaction = this.getActiveDb().transaction([docDB], accessType),
             objDocument = transaction.objectStore(docDB),
             recordCursor = [];
         
@@ -98,6 +91,64 @@
         
         transaction.onerror = function (error) {
             defer.reject(error);
+        };
+        
+        return defer.promise();
+    };
+    
+    /**
+     * open Local DB
+     * @param  {string} dbName database name
+     * @param  {integer} dbVersion database versioned number
+     * @param  {object} docOptions document settings
+     */
+    w.IndexedDB.prototype.openIndexedDBDatabase = function (dbName, dbVersion, docOptions) {
+        var defer = $.Deferred();
+        this.selectDB(dbName, dbVersion);
+        this.openDataBase();
+        
+        /**
+         * ON First creation Database or change version
+         * Create Documents and index columns
+         */
+        this.activeDB.onupgradeneeded = $.proxy(function () {
+            // create document
+            this.createDocument(docOptions);
+            // indexed columns
+            this.createIndex(docOptions.name, docOptions.fields.dni);
+            this.createIndex(docOptions.name, docOptions.fields.name);
+            this.createIndex(docOptions.name, docOptions.fields.charge);
+            this.createIndex(docOptions.name, docOptions.fields.birthdate);
+        }, this);
+        
+        /**
+         * on open database succefully connection
+         */
+        this.activeDB.onsuccess = function () {  
+            defer.resolve();
+        };
+        
+        /**
+         * on open database error connection
+         */
+        this.activeDB.onerror = function () {  
+            defer.reject(this.error);
+        };
+        
+        return defer.promise();
+    };
+    
+    w.IndexedDB.prototype.insertIndexedDBData = function (docName, accessType, optionsMember) {
+        var defer = $.Deferred(),
+            transaction = this.getActiveDb().transaction([docName], accessType),
+            putRequest = transaction.objectStore(docName).put(optionsMember);
+        
+        putRequest.onerror = function () {
+            defer.reject(this.error);
+        };
+        
+        transaction.oncomplete = function () {
+            defer.resolve();
         };
         
         return defer.promise();

@@ -1,4 +1,4 @@
-;(function ($, w) {
+;(function ($, w, d) {
     'use strict';
 
     w.inserTeamMemberFactory = function () {
@@ -64,16 +64,48 @@
             $(selectCharge).material_select();
         };
         
-        var refreshTableWidget = function () {
-            
-        };
-        
         var getMessageValidation = function () {
             return _messagesValidation;
         };
         
         var getDocumentData = function (indexName) {
             return _documentsData[indexName];
+        };
+        
+        var _getTableMemberData = function (arrData) {
+            var domFragment = d.createDocumentFragment(),
+                getTableData = function (data) {
+                    return [
+                        '<td>' + data.name + '</td>',
+                        '<td>' + data.dni + '</td>',
+                        '<td>' + data.charge + '</td>',
+                        '<td>' + data.birthdate + '</td>',
+                    ].join('\n');
+                };
+                
+            $(arrData).each(function(index, item) {
+                var tr = d.createElement('tr');
+                tr.dataset.indexeddbIndex = item.primaryKey;
+                tr.innerHTML = getTableData(item.value);
+                domFragment.appendChild(tr);
+            });
+            
+            return domFragment;
+        };
+        
+        var refreshTableWidget = function (tableWrapper, data) {
+            var $tableWrapper = $(tableWrapper), 
+                $tableBody = $tableWrapper.find('tbody'),
+                tableData;
+                
+            $tableWrapper.hide();
+            $tableBody.empty();
+            
+            if ($.isArray(data) && data.length > 0) {
+                tableData = _getTableMemberData(data);
+                $tableBody.append(tableData);
+                $tableWrapper.slideDown('slow');   
+            }
         };
         
         return {
@@ -83,4 +115,4 @@
             getDocumentData : getDocumentData
         };
     };
-}(jQuery, window));
+}(jQuery, window, document));

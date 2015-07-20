@@ -9,6 +9,7 @@ Form to Insert information of corporation members into **persistance database cl
 
 #### RESOURCES
 - [full tutorial](https://rolandocaldas.com/html5/indexeddb-tu-base-de-datos-local-en-html5)
+- [IndexedDB_API](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API)
 - [DEMO](http://www.cruzalosdedos.es/corporation-form/public/)
 
 #### ISSUES

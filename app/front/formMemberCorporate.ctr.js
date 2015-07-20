@@ -10,9 +10,27 @@
     $(d).ready(function () {
         var localDB = APP.localDB, connDB,
             formWidget = APP.formWidget,
-            widgetTeamMember = APP.widgetTeamMember;
+            widgetTeamMember = APP.widgetTeamMember,
+            $formMemberDni = formWidget.$form.find('.js-control-team-dni'),
+            $formMemberName = formWidget.$form.find('.js-control-team-name'),
+            $formMemberCharge = formWidget.$form.find('.js-control-team-charge:input'),
+            $formMemberBirthdate = formWidget.$form.find('.js-control-team-birthdate'),
+            loadMembersData = function () {
+                localDB.loadIndexedDBData('teamMembers', 'readonly')
+                    .done(function (data) {
+                        widgetTeamMember.refreshTableWidget('.js-table-members', data);
+                    })
+                    .fail(function (error) {
+                        console.error(error);
+                        widgetTeamMember.refreshTableWidget('.js-table-members', false);
+                        Materialize.toast('Fail, Cannot connect your Database.', 3000, 'rounded');
+                    });
+            };
              
-        widgetTeamMember.initDomElements('.js-modal-error-trigger', '.datepicker', '.js-control-team-charge');
+        widgetTeamMember.initDomElements(
+            '.js-modal-error-trigger',
+            '.datepicker',
+            '.js-control-team-charge');
         formWidget.setFormMessages(widgetTeamMember.getMessageValidation());
         
         // open Local DB
@@ -37,11 +55,11 @@
         };
         
         /**
-         * on open database succefully connection
+         * on open database succefully connection, load results db into table
          */
         connDB.onsuccess = function () {  
             console.info('Successfully loaded ´corporation´ database');
-            widgetTeamMember.refreshTableWidget();
+            loadMembersData();
         };
         
         /**
@@ -63,13 +81,13 @@
                 
                 // validate multiple input states
                 if (formWidget.nativeValidate() &
-                    formWidget.checkDni('.js-control-team-dni') &
-                    formWidget.checkBirthDateUI('.js-control-team-birthdate')) {
+                    formWidget.checkDni($formMemberDni) &
+                    formWidget.checkBirthDateUI($formMemberBirthdate)) {
                     var optionsNewMember = {
-                            dni: formWidget.$form.find('.js-control-team-dni').val(),
-                            name: formWidget.$form.find('.js-control-team-name').val(),
-                            birthdate: formWidget.$form.find('.js-control-team-charge').val(),
-                            charge: formWidget.$form.find('.js-control-team-birthdate').val()
+                            dni: $formMemberDni.val(),
+                            name: $formMemberName.val(),
+                            charge: $formMemberCharge.find(':selected').text(),
+                            birthdate: $formMemberBirthdate.val()
                         },
                         transaction = localDB.getActiveDb().transaction(['teamMembers'], 'readwrite'),
                         putRequest = transaction.objectStore('teamMembers').put(optionsNewMember);
@@ -80,7 +98,7 @@
                     };
                     
                     transaction.oncomplete = function () {
-                        widgetTeamMember.refreshTableWidget();
+                        loadMembersData();
                         formWidget.reset();
                         formWidget.changeInputStyleState('.js-control-form:input', null);
                         Materialize.toast('Added, new Member.', 3000, 'rounded');

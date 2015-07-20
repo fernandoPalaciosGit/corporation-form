@@ -51,9 +51,8 @@
         }
     };
     
-    w.FormValidation.prototype.checkDni = function (s) {
+    w.FormValidation.prototype.checkDni = function ($dni) {
         var numero, letra, letraControl,
-            $dni = this.$form.find(s),
             dniName = $dni.val().trim(),
             isValid = false;
 
@@ -71,9 +70,8 @@
         return isValid;
     };
     
-    w.FormValidation.prototype.checkBirthDateUI = function (s) {
-        var $birthdate = this.$form.find(s),
-            $birthdateVal = $birthdate.val().trim(),
+    w.FormValidation.prototype.checkBirthDateUI = function ($birthdate) {
+        var $birthdateVal = $birthdate.val().trim(),
             isValid = ($birthdateVal.length > 0) ? true : false;    
         
         !isValid && this.changeInputDomState($birthdate, 'invalid', 'birthdate', 'text');

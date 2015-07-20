@@ -73,4 +73,33 @@
     w.IndexedDB.prototype.getActiveDb = function () {
         return this.activeDB.result;
     };
+    
+    w.IndexedDB.prototype.loadIndexedDBData = function (docDB, accessType) {
+        var defer = $.Deferred(),
+            transaction = this.activeDB.result.transaction([docDB], accessType),
+            objDocument = transaction.objectStore(docDB),
+            recordCursor = [];
+        
+        objDocument.openCursor().onsuccess = function (e) {
+            var cursor = e.target.result;
+            
+            if (!!cursor) {
+                recordCursor.push({
+                        value: cursor.value,
+                        primaryKey: cursor.primaryKey
+                    });
+                cursor.continue();
+            }
+        };
+            
+        transaction.oncomplete = function () {
+            defer.resolve(recordCursor);
+        };
+        
+        transaction.onerror = function (error) {
+            defer.reject(error);
+        };
+        
+        return defer.promise();
+    };
 }(jQuery, window));

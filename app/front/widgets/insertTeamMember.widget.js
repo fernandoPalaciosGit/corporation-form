@@ -93,18 +93,15 @@
             return domFragment;
         };
         
-        var refreshTableWidget = function (tableWrapper, data) {
-            var $tableWrapper = $(tableWrapper), 
-                $tableBody = $tableWrapper.find('tbody'),
+        var refreshTableWidget = function ($tableWrapper, data) {
+            var $tableBody = $tableWrapper.find('tbody'),
+                hasRequestData = $.isArray(data) && data.length > 0,
                 tableData;
-                
-            $tableWrapper.hide();
-            $tableBody.empty();
-            
-            if ($.isArray(data) && data.length > 0) {
+
+            if (hasRequestData) {
+                $tableBody.empty();
                 tableData = _getTableMemberData(data);
                 $tableBody.append(tableData);
-                $tableWrapper.slideDown('slow');   
             }
         };
         

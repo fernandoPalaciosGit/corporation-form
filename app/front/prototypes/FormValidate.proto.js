@@ -56,11 +56,11 @@
             dniName = $dni.val().trim(),
             isValid = false;
 
-        if (/^[XYZ]?\d{5,8}[A-Z]$/.test(dniName)) {
+        if (/^[XYZ]?\d{5,8}[A-Za-z]$/.test(dniName)) {
             numero = dniName.substr(0,dniName.length-1);
             numero = numero.replace('X', 0).replace('Y', 1).replace('Z', 2);
             numero = numero % 23;
-            letra = dniName.substr(dniName.length-1, 1);
+            letra = dniName.substr(dniName.length-1, 1).toUpperCase();
             letraControl = 'TRWAGMYFPDXBNJZSQVHLCKET'.substring(numero, numero+1);            
             isValid = (letraControl !== letra) ? false : true;
         }
@@ -104,4 +104,5 @@
     w.FormValidation.prototype.setFormMessages = function (msgVal) {
         this.messagesValidation = msgVal;
     };
+
 }(jQuery, window, document));

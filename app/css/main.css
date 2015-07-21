@@ -22,6 +22,26 @@
     transform: rotate(-90deg);
 }
 
+.js-table-members td{
+    cursor: pointer;
+}
+
+.hoverable:hover {
+    overflow: hidden;
+}
+
+/* Estate elements : showed*/
+.widget-wrapper__edit-member .widget-item__edit-member,
+.widget-wrapper__load-table .widget-item__insert-member {
+    display: block;
+}
+
+/* Estate elements : hidden*/
+.widget-wrapper__edit-member .widget-item__insert-member,
+.widget-wrapper__load-table .widget-item__edit-member {
+    display: none;
+}
+
 /* Issue Materialize : https://github.com/Dogfalo/materialize/issues/1390 */
 select.js-control-form.invalid ~ .select-dropdown {
     border-bottom: 1px solid #F44336;

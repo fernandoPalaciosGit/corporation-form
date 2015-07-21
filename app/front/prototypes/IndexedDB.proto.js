@@ -153,4 +153,10 @@
         
         return defer.promise();
     };
+    
+    w.IndexedDB.prototype.editIndexedDBData = function () {
+        var defer = $.Deferred();
+        
+        return defer.promise();
+    };
 }(jQuery, window));

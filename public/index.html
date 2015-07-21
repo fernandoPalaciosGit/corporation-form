@@ -3,6 +3,7 @@
 <head>
     <meta charset='UTF-8'>
     <title>Indexded db : database in html5</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src='./../bower_components/jquery/dist/jquery.min.js'></script>
     <script src='./../bower_components/IndexedDBShim/dist/indexeddbshim.min.js'></script>
@@ -10,7 +11,9 @@
     <link rel='stylesheet' href='./../bower_components/materialize/dist/css/materialize.min.css'>
     <link rel='stylesheet' href='./../app/css/main.css'>
 </head>
-<body>    
+<body>
+<main id="widget-suscribe-member" class="section widget-wrapper__load-table">
+        
     <div class="section">
         <a href="https://github.com/fernandoPalaciosGit/corporation-form"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/82b228a3648bf44fc1163ef44c62fcc60081495e/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_red_aa0000.png"></a>
     </div>
@@ -24,14 +27,14 @@
         
         <form class="js-form-new-member" action="#">
             <div class="row">
-                <div class="input-field col s12 m17 l6">
+                <div class="input-field col s12 m7 l6">
                     <input  type="text" pattern="[a-zA-Z\s]{4,}" required="required"
                             data-msg-validation="nameInput"
                             class="validate js-control-form js-control-team-name" id="name">
                     <label for="name" class="active">Team member name</label>
                 </div>
                 
-                <div class="input-field col s12 m15 l6">
+                <div class="input-field col s12 m5 l6">
                     <input  type="text" pattern="[a-zA-Z0-9_-\s]+" required="required"
                             data-msg-validation="dniInput"
                             class="js-control-form js-control-team-dni" id="dni">
@@ -40,7 +43,7 @@
             </div>
             
             <div class="row">
-                <div class="input-field col s12 m17 l6">
+                <div class="input-field col s12 m7 l6">
                     <select class="validate js-control-form js-control-team-charge"
                             data-msg-validation="chargeInput" required="required" id="charge">
                         <option value="" disabled selected>Position into company</option>
@@ -51,16 +54,23 @@
                     <label for="charge" class="active hide">Position into company</label>
                 </div>
                 
-                <div class="input-field col s12 m15 l6">
+                <div class="input-field col s12 m5 l6">
                     <input  id="birthdate" type="date"
                             class="datepicker js-control-form js-control-team-birthdate">
                     <label for="birthdate" class="active">Birthday</label>
                 </div>                
             </div>
             
-            <div class="row">
+            <div class="row widget-item__insert-member">
                 <div class="input-field col s12 center-align">
-                    <input  class="btn" type="submit" value="Añadir"/>
+                    <a class="btn waves-effect waves-light js-submit-insert-member">Incorporate member</a>
+                </div>
+            </div>
+            
+            <div class="row widget-item__edit-member">
+                <div class="input-field col s12 center-align">
+                    <a class="waves-effect waves-teal btn-flat js-submit-edit-cancel-member">Cancel</a>
+                    <a class="btn waves-effect waves-light js-submit-edit-save-member">Save</a>
                 </div>
             </div>
         </form>
@@ -68,12 +78,12 @@
      
     <div class="divider"></div>
     
-    <div class="section js-table-members">
+    <div class="js-table-members section widget-item__insert-member">
         <h2 class="center text-size-h4">Our Members</h2>
     
         <div class="row">
             <div class="col s12 m12 l8 offset-l2">
-                <table class="striped centered">
+                <table class="centered hoverable responsive-table">
                     <thead>
                       <tr>
                           <th data-field="name">Name</th>
@@ -108,5 +118,6 @@
     <script src='./../app/front/prototypes/IndexedDB.proto.js'></script>
     <script src='./../app/front/widgets/insertTeamMember.widget.js'></script>
     <script src='./../app/front/formMemberCorporate.ctr.js'></script>
+</main>
 </body>
 </html>

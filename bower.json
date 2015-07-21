@@ -23,6 +23,7 @@
     "jquery": "~2.1.4",
     "materialize": "~0.97.0",
     "IndexedDBShim": "~2.0.4",
-    "github-fork-ribbon-css": "~0.1.1"
+    "github-fork-ribbon-css": "~0.1.1",
+    "html5-boilerplate": "~5.2.0"
   }
 }

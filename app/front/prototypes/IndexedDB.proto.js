@@ -154,7 +154,7 @@
         return defer.promise();
     };
     
-    w.IndexedDB.prototype.getIndexedDBData = function (indexObject) {
+    w.IndexedDB.prototype.getIndexedDBData = function (docName, accessType, indexObject) {
         var defer = $.Deferred();
         defer.resolve(indexObject);
         return defer.promise();

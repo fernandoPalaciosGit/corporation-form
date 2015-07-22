@@ -17,6 +17,11 @@
             $formMemberName = $widgetSuscribeMember.find('.js-control-team-name'),
             $formMemberCharge = $widgetSuscribeMember.find('.js-control-team-charge:input'),
             $formMemberBirthdate = $widgetSuscribeMember.find('.js-control-team-birthdate'),
+            resetFormStatus = function (newState, arrOldState) {
+                widgetTeamMember.changeWidgetDomState($widgetSuscribeMember, newState,arrOldState);
+                formWidget.reset();
+                formWidget.changeInputStyleState('.js-control-form:input', null);
+            },
             // load all objects from document into widget
             loadMembersData = function () {
                 localDB.loadIndexedDBData('teamMembers', 'readonly')
@@ -31,12 +36,7 @@
                         Materialize.toast('Fail, Cannot connect your Database.', 3000, 'rounded');
                     })
                     .always(function () {
-                        widgetTeamMember.changeWidgetDomState(
-                            $widgetSuscribeMember, 'wrapper__insert-member',
-                            ['wrapper__edit-member']
-                        );
-                        formWidget.reset();
-                        formWidget.changeInputStyleState('.js-control-form:input', null);
+                        resetFormStatus('wrapper__insert-member', ['wrapper__edit-member']);
                     });
             },
             // insert new object into document
@@ -51,14 +51,19 @@
                         Materialize.toast('Fail, dni must be unique.', 3000, 'rounded');
                     });
             },
+            /*
+            onclick -> .js-submit-edit-save-member
+            editMemberData = function () {}
+             */
             // load data from one object of document into form widget
             loadFormMemberData = function (indexObject) {
                 localDB.getIndexedDBData('teamMembers', 'readonly', indexObject)
                     .done(function (dataMember) {
-                        widgetTeamMember.changeWidgetDomState(
-                            $widgetSuscribeMember, 'wrapper__edit-member',
-                            ['wrapper__insert-member']
-                        );
+                        resetFormStatus('wrapper__edit-member', ['wrapper__insert-member']);
+                        console.dir(dataMember);
+                        /*
+                        formWidget.fillDataForm(dataMember) // load new data into form
+                        ;*/
                     })
                     .fail(function (error) {
                         console.error('Error put -> ', error.name, error.message);
@@ -107,6 +112,9 @@
                 } else {
                     formWidget.$modalWidget.openModal();
                 }
+            })
+            .on('click', '.js-submit-edit-cancel-member', function () {
+                resetFormStatus('wrapper__insert-member', ['wrapper__edit-member']);
             });
         formWidget.$form.find(':input').on('invalid', function (ev) {
             ev.preventDefault(); // prevent show mesage native validity

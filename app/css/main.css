@@ -30,15 +30,20 @@
     overflow: hidden;
 }
 
+.widget-item__insert-member,
+.widget-item__edit-member {
+    display: none;    
+}
+
 /* Estate elements : showed*/
-.widget-wrapper__edit-member .widget-item__edit-member,
-.widget-wrapper__load-table .widget-item__insert-member {
+.wrapper__edit-member .widget-item__edit-member,
+.wrapper__insert-member .widget-item__insert-member {
     display: block;
 }
 
 /* Estate elements : hidden*/
-.widget-wrapper__edit-member .widget-item__insert-member,
-.widget-wrapper__load-table .widget-item__edit-member {
+.wrapper__edit-member .widget-item__insert-member,
+.wrapper__insert-member .widget-item__edit-member {
     display: none;
 }
 

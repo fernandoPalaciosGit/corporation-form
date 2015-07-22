@@ -21,15 +21,20 @@
             loadMembersData = function () {
                 localDB.loadIndexedDBData('teamMembers', 'readonly')
                     .done(function (data) {
-                        widgetTeamMember.refreshTableWidget($tableMembers, data);
-                        $widgetSuscribeMember.addClass('widget-wrapper__load-table');
+                        var hasRequestData = $.isArray(data) && data.length > 0;
+                        
+                        hasRequestData && widgetTeamMember.refreshTableWidget($tableMembers, data);
+                        $tableMembers.toggleClass('hide', !hasRequestData);
                     })
                     .fail(function (error) {
                         console.error(error);
-                        $widgetSuscribeMember.removeClass('widget-wrapper__load-table');
                         Materialize.toast('Fail, Cannot connect your Database.', 3000, 'rounded');
                     })
                     .always(function () {
+                        widgetTeamMember.changeWidgetDomState(
+                            $widgetSuscribeMember, 'wrapper__insert-member',
+                            ['wrapper__edit-member']
+                        );
                         formWidget.reset();
                         formWidget.changeInputStyleState('.js-control-form:input', null);
                     });
@@ -46,23 +51,18 @@
                         Materialize.toast('Fail, dni must be unique.', 3000, 'rounded');
                     });
             },
-            // load data from one object of document
-            editMemberData = function (indexObject) {
-                $widgetSuscribeMember
-                    .removeClass('widget-wrapper__load-table')
-                    .addClass('widget-wrapper__edit-member');
-                localDB.editIndexedDBData('teamMembers', 'readonly', indexObject)
-                    .done(function () {
-                        loadMembersData();
+            // load data from one object of document into form widget
+            loadFormMemberData = function (indexObject) {
+                localDB.getIndexedDBData('teamMembers', 'readonly', indexObject)
+                    .done(function (dataMember) {
+                        widgetTeamMember.changeWidgetDomState(
+                            $widgetSuscribeMember, 'wrapper__edit-member',
+                            ['wrapper__insert-member']
+                        );
                     })
                     .fail(function (error) {
                         console.error('Error put -> ', error.name, error.message);
-                        Materialize.toast('Fail, could not change data.', 3000, 'rounded');
-                    })
-                    .always(function () {
-                        $widgetSuscribeMember
-                            .addClass('widget-wrapper__load-table')
-                            .removeClass('widget-wrapper__edit-member');
+                        Materialize.toast('Fail, could not get data.', 3000, 'rounded');
                     });
             },
             // initialize active database
@@ -113,9 +113,8 @@
         });
         $tableMembers.find('tbody').on('click', 'tr', function () {
             var indexObject = this.dataset.indexeddbIndex;
-            editMemberData(indexObject);
+            loadFormMemberData(indexObject);
         });
-        
         openMemberDatabase();
     });
 }(jQuery, window, document, IndexedDB, FormValidation, Materialize, inserTeamMemberFactory));

@@ -154,9 +154,9 @@
         return defer.promise();
     };
     
-    w.IndexedDB.prototype.editIndexedDBData = function () {
+    w.IndexedDB.prototype.getIndexedDBData = function (indexObject) {
         var defer = $.Deferred();
-        
+        defer.resolve(indexObject);
         return defer.promise();
     };
 }(jQuery, window));

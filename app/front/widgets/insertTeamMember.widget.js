@@ -95,17 +95,21 @@
         
         var refreshTableWidget = function ($tableWrapper, data) {
             var $tableBody = $tableWrapper.find('tbody'),
-                hasRequestData = $.isArray(data) && data.length > 0,
                 tableData;
 
-            if (hasRequestData) {
-                $tableBody.empty();
-                tableData = _getTableMemberData(data);
-                $tableBody.append(tableData);
-            }
+            $tableBody.empty();
+            tableData = _getTableMemberData(data);
+            $tableBody.append(tableData);
+        };
+        
+        var changeWidgetDomState = function ($widget, newState, arrOldState) {
+            $widget
+                .removeClass(arrOldState.join(' '))
+                .addClass(newState);
         };
         
         return {
+            changeWidgetDomState: changeWidgetDomState,
             initDomElements: initDomElements,
             refreshTableWidget: refreshTableWidget,
             getMessageValidation : getMessageValidation,

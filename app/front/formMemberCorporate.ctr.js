@@ -20,6 +20,7 @@
             resetFormStatus = function (newState, arrOldState) {
                 widgetTeamMember.changeWidgetDomState($widgetSuscribeMember, newState,arrOldState);
                 formWidget.reset();
+                $formMemberCharge.prop('selectedIndex', 0).material_select();
                 formWidget.changeInputStyleState('.js-control-form:input', null);
             },
             // load all objects from document into widget
@@ -72,6 +73,7 @@
                 localDB.openIndexedDBDatabase('corporation', 1, widgetTeamMember.getDocumentData('teamMembers'))
                     .done(function () {
                         loadMembersData();
+                        console.info('Successfully loaded ´corporation´ database');
                     })
                     .fail(function (error) {
                         console.error('Error connection -> ', error.name, error.message);

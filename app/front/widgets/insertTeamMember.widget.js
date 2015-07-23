@@ -117,14 +117,24 @@
         var fillDataForm = function ($form, dataMember) {
             for ( var keyData in dataMember) {
                 var $input = $form.find('#' + keyData + ':input'),
-                    $label = $form.find('label[for="' + keyData + '"]'),
-                    inputType = $input.prop('type');
+                    inputType = $input.prop('type'),
+                    inputText = dataMember[keyData];
                 
-                $input.val(dataMember[keyData]);
                 
                  // control dinamicaly input
                 if (inputType === _inputType.SELECT) {
-                    $input.material_select();   
+                    // reset select by index
+                    var indexInput = $input
+                                        .siblings('ul.select-dropdown')
+                                        .find('li:contains("' + inputText + '")')
+                                        .index();
+                    
+                    $input
+                        .prop('selectedIndex', indexInput)
+                        .material_select();
+                
+                } else if (inputType === _inputType.TEXT) {
+                    $input.val(inputText);
                 }
                 
                 $input.trigger('change');

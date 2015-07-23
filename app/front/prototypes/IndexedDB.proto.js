@@ -89,8 +89,9 @@
             defer.resolve(recordCursor);
         };
         
-        transaction.onerror = function (error) {
-            defer.reject(error);
+        transaction.onerror = function () {
+            console.error('Error put -> ', this.error.name, this.error.message);
+            defer.reject();
         };
         
         return defer.promise();
@@ -124,7 +125,8 @@
         /**
          * on open database succefully connection
          */
-        this.activeDB.onsuccess = function () {  
+        this.activeDB.onsuccess = function () {
+            console.info('Successfully loaded ´corporation´ database');  
             defer.resolve();
         };
         
@@ -132,7 +134,8 @@
          * on open database error connection
          */
         this.activeDB.onerror = function () {  
-            defer.reject(this.error);
+            console.error('Error put -> ', this.error.name, this.error.message);
+            defer.reject();
         };
         
         return defer.promise();
@@ -144,7 +147,8 @@
             putRequest = transaction.objectStore(docName).put(optionsMember);
         
         putRequest.onerror = function () {
-            defer.reject(this.error);
+            console.error('Error put -> ', this.error.name, this.error.message);
+            defer.reject();
         };
         
         transaction.oncomplete = function () {
@@ -168,8 +172,9 @@
             defer.resolve(requestResult);
         };
         
-        transaction.onerror = function (error) {
-            defer.reject(error);
+        transaction.onerror = function () {
+            console.error('Error put -> ', this.error.name, this.error.message);
+            defer.reject();
         };
             
         return defer.promise();

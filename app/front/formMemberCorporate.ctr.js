@@ -32,8 +32,7 @@
                         hasRequestData && widgetTeamMember.refreshTableWidget($tableMembers, data);
                         $tableMembers.toggleClass('hide', !hasRequestData);
                     })
-                    .fail(function (error) {
-                        console.error(error);
+                    .fail(function () {
                         Materialize.toast('Fail, Cannot connect your Database.', 3000, 'rounded');
                     })
                     .always(function () {
@@ -47,8 +46,7 @@
                         loadMembersData();
                         Materialize.toast('Added, new Member.', 3000, 'rounded');
                     })
-                    .fail(function (error) {
-                        console.error('Error put -> ', error.name, error.message);
+                    .fail(function () {
                         Materialize.toast('Fail, dni must be unique.', 3000, 'rounded');
                     });
             },
@@ -63,8 +61,7 @@
                         resetFormStatus('wrapper__edit-member', ['wrapper__insert-member']);
                         widgetTeamMember.fillDataForm(formWidget.$form, dataMember);
                     })
-                    .fail(function (error) {
-                        console.error('Error put -> ', error.name, error.message);
+                    .fail(function () {
                         Materialize.toast('Fail, could not get data.', 3000, 'rounded');
                     });
             },
@@ -73,10 +70,6 @@
                 localDB.openIndexedDBDatabase('corporation', 1, widgetTeamMember.getDocumentData('teamMembers'))
                     .done(function () {
                         loadMembersData();
-                        console.info('Successfully loaded ´corporation´ database');
-                    })
-                    .fail(function (error) {
-                        console.error('Error connection -> ', error.name, error.message);
                     });
             };
              

@@ -166,6 +166,7 @@
             
         requestObject.onsuccess = function () {
             requestResult = requestObject.result;
+            requestResult.primaryKey = indexObject;
         };
         
         transaction.oncomplete = function () {

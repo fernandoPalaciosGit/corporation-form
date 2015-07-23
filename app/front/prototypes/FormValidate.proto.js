@@ -4,13 +4,14 @@
     w.FormValidation = function (f, m) {
         this.$form = $(f);
         this.$modalWidget = $(m);
+        this.changeMemberData = null;
     };
     
     w.FormValidation.prototype.reset = function () {
         this.$form.get(0).reset();
     };
     
-    w.FormValidation.prototype.setCustomMsg = function (itemText) {
+    w.FormValidation.prototype.setCustomValidationItems = function (itemText) {
         var $erroList = this.$modalWidget.find('.list-errors');
         if (itemText === null) {
             $erroList.empty();
@@ -81,7 +82,7 @@
     
     w.FormValidation.prototype.changeInputDomState = function ($input, domState, msgIndex, msgtate) {
         $input.addClass(domState);
-        this.setCustomMsg(this.messagesValidation[msgIndex][msgtate]);
+        this.setCustomValidationItems(this.messagesValidation[msgIndex][msgtate]);
     };
     
     /**

@@ -40,8 +40,8 @@
                     });
             },
             // insert new object into document
-            insertMemberData = function (optionsNewMember) {
-                localDB.insertIndexedDBData('teamMembers', 'readwrite', optionsNewMember)
+            insertMemberData = function (optionsMember) {
+                localDB.insertIndexedDBData('teamMembers', 'readwrite', optionsMember)
                     .done(function () {
                         loadMembersData();
                         Materialize.toast('Added, new Member.', 3000, 'rounded');
@@ -50,15 +50,15 @@
                         Materialize.toast('Fail, dni must be unique.', 3000, 'rounded');
                     });
             },
-            /*
-            onclick -> .js-submit-edit-save-member
-            editMemberData = function () {}
-             */
+            editMemberData = function (optionsMember) {
+                loadMembersData();
+            },
             // load data from one object of document into form widget
             loadFormMemberData = function (indexObject) {
                 localDB.getIndexedDBData('teamMembers', 'readonly', indexObject)
                     .done(function (dataMember) {
                         resetFormStatus('wrapper__edit-member', ['wrapper__insert-member']);
+                        formWidget.changeMemberData = dataMember;
                         widgetTeamMember.fillDataForm(formWidget.$form, dataMember);
                     })
                     .fail(function () {
@@ -68,9 +68,31 @@
             // initialize active database
             openMemberDatabase = function () {
                 localDB.openIndexedDBDatabase('corporation', 1, widgetTeamMember.getDocumentData('teamMembers'))
-                    .done(function () {
-                        loadMembersData();
-                    });
+                    .done(loadMembersData);
+            },
+            // validate form input before insert or update member
+            isCustomValidateForm = function () {
+                formWidget.setCustomValidationItems(null);
+                // Issue Materialize : https://github.com/Dogfalo/materialize/issues/1647
+                $('.lean-overlay').remove();
+                formWidget.changeInputStyleState('.js-control-form:input', true);
+                
+                // validate multiple input states
+                var isValidateForm =    formWidget.nativeValidate() &
+                                        formWidget.checkDni($formMemberDni) &
+                                        formWidget.checkBirthDateUI($formMemberBirthdate);
+                
+                !isValidateForm && formWidget.$modalWidget.openModal() ;
+                return isValidateForm;
+            },
+            // actual form values 
+            getOptionsMember = function () {
+                return {
+                    dni: $formMemberDni.val(),
+                    name: $formMemberName.val(),
+                    charge: $formMemberCharge.find(':selected').text(),
+                    birthdate: $formMemberBirthdate.val()
+                };            
             };
              
         widgetTeamMember.initDomElements(
@@ -83,30 +105,20 @@
                 ev.preventDefault(); // prevent redirect
             })
             .on('click', '.js-submit-insert-member', function () {
-                formWidget.setCustomMsg(null);
-                // Issue Materialize : https://github.com/Dogfalo/materialize/issues/1647
-                $('.lean-overlay').remove();
-                formWidget.changeInputStyleState('.js-control-form:input', true);
-                
-                // validate multiple input states
-                if (formWidget.nativeValidate() &
-                    formWidget.checkDni($formMemberDni) &
-                    formWidget.checkBirthDateUI($formMemberBirthdate)) {
-                    var optionsNewMember = {
-                            dni: $formMemberDni.val(),
-                            name: $formMemberName.val(),
-                            charge: $formMemberCharge.find(':selected').text(),
-                            birthdate: $formMemberBirthdate.val()
-                        };
-                    
-                    insertMemberData(optionsNewMember);
-                
-                } else {
-                    formWidget.$modalWidget.openModal();
+                if (isCustomValidateForm()) {
+                    insertMemberData(getOptionsMember());    
                 }
             })
             .on('click', '.js-submit-edit-cancel-member', function () {
+                formWidget.changeMemberData = null;
                 resetFormStatus('wrapper__insert-member', ['wrapper__edit-member']);
+            })
+            .on('click', '.js-submit-edit-save-member', function () {
+                var optionsMember = $.extend({}, formWidget.changeMemberData); 
+                if (!$.isEmptyObject(optionsMember) && isCustomValidateForm()) {
+                    editMemberData(optionsMember);   
+                }
+                formWidget.changeMemberData = null;
             });
         formWidget.$form.find(':input').on('invalid', function (ev) {
             ev.preventDefault(); // prevent show mesage native validity

@@ -44,6 +44,11 @@
                 }
             }
         };
+        
+        var _inputType = {
+            SELECT : 'select-one',
+            TEXT: 'text'
+        };
                 
         var initDomElements = function (triggerWidget, datepicker, selectCharge) {
             $(triggerWidget).leanModal({
@@ -108,7 +113,26 @@
                 .addClass(newState);
         };
         
+        // load new data into form depend on the tyepe
+        var fillDataForm = function ($form, dataMember) {
+            for ( var keyData in dataMember) {
+                var $input = $form.find('#' + keyData + ':input'),
+                    $label = $form.find('label[for="' + keyData + '"]'),
+                    inputType = $input.prop('type');
+                
+                $input.val(dataMember[keyData]);
+                
+                 // control dinamicaly input
+                if (inputType === _inputType.SELECT) {
+                    $input.material_select();   
+                }
+                
+                $input.trigger('change');
+            }
+        };
+        
         return {
+            fillDataForm : fillDataForm,
             changeWidgetDomState: changeWidgetDomState,
             initDomElements: initDomElements,
             refreshTableWidget: refreshTableWidget,

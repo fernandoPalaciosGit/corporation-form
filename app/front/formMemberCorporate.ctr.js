@@ -60,10 +60,7 @@
                 localDB.getIndexedDBData('teamMembers', 'readonly', indexObject)
                     .done(function (dataMember) {
                         resetFormStatus('wrapper__edit-member', ['wrapper__insert-member']);
-                        console.dir(dataMember);
-                        /*
-                        formWidget.fillDataForm(dataMember) // load new data into form
-                        ;*/
+                        widgetTeamMember.fillDataForm(formWidget.$form, dataMember);
                     })
                     .fail(function (error) {
                         console.error('Error put -> ', error.name, error.message);

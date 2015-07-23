@@ -67,10 +67,10 @@
         return this.activeDB.result;
     };
     
-    w.IndexedDB.prototype.loadIndexedDBData = function (docDB, accessType) {
+    w.IndexedDB.prototype.loadIndexedDBData = function (docName, accessType) {
         var defer = $.Deferred(),
-            transaction = this.getActiveDb().transaction([docDB], accessType),
-            objDocument = transaction.objectStore(docDB),
+            transaction = this.getActiveDb().transaction([docName], accessType),
+            objDocument = transaction.objectStore(docName),
             recordCursor = [];
         
         objDocument.openCursor().onsuccess = function (e) {
@@ -155,8 +155,23 @@
     };
     
     w.IndexedDB.prototype.getIndexedDBData = function (docName, accessType, indexObject) {
-        var defer = $.Deferred();
-        defer.resolve(indexObject);
+        var defer = $.Deferred(),
+            transaction = this.getActiveDb().transaction([docName], accessType),
+            requestObject = transaction.objectStore(docName).get(parseInt(indexObject, 10)),
+            requestResult = null;
+            
+        requestObject.onsuccess = function () {
+            requestResult = requestObject.result;
+        };
+        
+        transaction.oncomplete = function () {
+            defer.resolve(requestResult);
+        };
+        
+        transaction.onerror = function (error) {
+            defer.reject(error);
+        };
+            
         return defer.promise();
     };
 }(jQuery, window));

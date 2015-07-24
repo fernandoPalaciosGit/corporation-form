@@ -37,23 +37,6 @@
         w.shimIndexedDB.__useShim();
     };
     
-    /**
-     * Open Stored database, or create new one
-     */
-    w.IndexedDB.prototype.openDataBase = function () {
-        this.activeDB = this.IDB.open(this.dbName, this.version);
-    };
-    
-    /**
-     * Create and store the active document 
-     * @param  {string} docName index from active documents database
-     */
-    w.IndexedDB.prototype.createDocument = function (docDb) {
-        var activeDB = this.activeDB.result;
-            
-        this.activeDocuments[docDb.name] = activeDB.createObjectStore(docDb.name, docDb.options);
-    };
-    
     w.IndexedDB.prototype.createIndex = function (docDBName, fieldOptions) {
         var activeDoc = this.activeDocuments[docDBName];
         
@@ -90,7 +73,7 @@
         };
         
         transaction.onerror = function () {
-            console.error('Error put -> ', this.error.name, this.error.message);
+            defer.notify(['Error get data', this.error.name, this.error.message].join(' -> '), 'error');
             defer.reject();
         };
         
@@ -98,7 +81,7 @@
     };
     
     /**
-     * open Local DB
+     * Open Stored database, or create new one
      * @param  {string} dbName database name
      * @param  {integer} dbVersion database versioned number
      * @param  {object} docOptions document settings
@@ -106,35 +89,41 @@
     w.IndexedDB.prototype.openIndexedDBDatabase = function (dbName, dbVersion, docOptions) {
         var defer = $.Deferred();
         this.selectDB(dbName, dbVersion);
-        this.openDataBase();
+        this.activeDB = this.IDB.open(this.dbName, this.version);
         
         /**
          * ON First creation Database or change version
-         * Create Documents and index columns
+         * Create and store the active document, and its indexed fields
          */
         this.activeDB.onupgradeneeded = $.proxy(function () {
-            // create document
-            this.createDocument(docOptions);
-            // indexed columns
-            this.createIndex(docOptions.name, docOptions.fields.dni);
-            this.createIndex(docOptions.name, docOptions.fields.name);
-            this.createIndex(docOptions.name, docOptions.fields.charge);
-            this.createIndex(docOptions.name, docOptions.fields.birthdate);
+            defer.notify('Upgrade ´' + this.dbName + '´ Database', 'info');
+            
+            if (!this.getActiveDb().objectStoreNames.contains(docOptions.name)) {
+                var documentName = docOptions.name;
+                
+                this.activeDocuments[documentName] = this.getActiveDb().createObjectStore(documentName, docOptions.options);
+                defer.notify('Created ´' + documentName + '´ document', 'info'); 
+                
+                this.createIndex(documentName, docOptions.fields.dni);
+                this.createIndex(documentName, docOptions.fields.name);
+                this.createIndex(documentName, docOptions.fields.charge);
+                defer.notify('Created indexed fields into ´' + documentName + '´ document', 'info'); 
+            }
         }, this);
         
         /**
          * on open database succefully connection
          */
-        this.activeDB.onsuccess = function () {
-            console.info('Successfully loaded ´corporation´ database');  
+        this.activeDB.onsuccess = $.proxy(function () {
+            defer.notify('Successfully loaded ´' + this.dbName + '´ database', 'info');
             defer.resolve();
-        };
+        }, this);
         
         /**
          * on open database error connection
          */
         this.activeDB.onerror = function () {  
-            console.error('Error put -> ', this.error.name, this.error.message);
+            defer.notify(['Error open DB', this.error.name, this.error.message].join(' -> '), 'error');
             defer.reject();
         };
         
@@ -147,7 +136,7 @@
             putRequest = transaction.objectStore(docName).put(optionsMember);
         
         putRequest.onerror = function () {
-            console.error('Error put -> ', this.error.name, this.error.message);
+            defer.notify(['Error insert data', this.error.name, this.error.message].join(' -> '), 'error');
             defer.reject();
         };
         
@@ -155,6 +144,12 @@
             defer.resolve();
         };
         
+        return defer.promise();
+    };
+    
+    w.IndexedDB.prototype.updateIndexedDBData = function (docName, accessType, optionsMember) {
+        var defer = $.Deferred();
+        defer.resolve();
         return defer.promise();
     };
     
@@ -174,7 +169,7 @@
         };
         
         transaction.onerror = function () {
-            console.error('Error put -> ', this.error.name, this.error.message);
+            defer.notify(['Error get data', this.error.name, this.error.message].join(' -> '), 'error');
             defer.reject();
         };
             

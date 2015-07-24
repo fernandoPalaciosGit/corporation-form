@@ -1,10 +1,15 @@
 ;(function ($, w, d, IndexedDB, FormValidation, Materialize, widgetTeamMember) {
     'use strict';
-    
+        
     var APP = {
         localDB : new IndexedDB(),
         formWidget : new FormValidation('.js-form-new-member', '#modal-error-widget'),
-        widgetTeamMember: widgetTeamMember()
+        widgetTeamMember: widgetTeamMember(),
+        DB: {
+            NAME: 'corporation',
+            DOCUMENT: 'teamMembers',
+            VERSION: 1
+        }
     };
             
     $(d).ready(function () {
@@ -23,9 +28,19 @@
                 $formMemberCharge.prop('selectedIndex', 0).material_select();
                 formWidget.changeInputStyleState('.js-control-form:input', null);
             },
+            // initialize active database
+            openMemberDatabase = function () {
+                localDB.openIndexedDBDatabase(
+                        APP.DB.NAME,
+                        APP.DB.VERSION,
+                        widgetTeamMember.getDocumentData(APP.DB.DOCUMENT)
+                    )
+                    .done(loadMembersData)
+                    .progress(notifyProggress);
+            },
             // load all objects from document into widget
             loadMembersData = function () {
-                localDB.loadIndexedDBData('teamMembers', 'readonly')
+                localDB.loadIndexedDBData(APP.DB.DOCUMENT, 'readonly')
                     .done(function (data) {
                         var hasRequestData = $.isArray(data) && data.length > 0;
                         
@@ -37,25 +52,35 @@
                     })
                     .always(function () {
                         resetFormStatus('wrapper__insert-member', ['wrapper__edit-member']);
-                    });
+                    })
+                    .progress(notifyProggress);
             },
             // insert new object into document
             insertMemberData = function (optionsMember) {
-                localDB.insertIndexedDBData('teamMembers', 'readwrite', optionsMember)
+                localDB.insertIndexedDBData(APP.DB.DOCUMENT, 'readwrite', optionsMember)
                     .done(function () {
                         loadMembersData();
                         Materialize.toast('Added, new Member.', 3000, 'rounded');
                     })
                     .fail(function () {
                         Materialize.toast('Fail, dni must be unique.', 3000, 'rounded');
-                    });
+                    })
+                    .progress(notifyProggress);
             },
             editMemberData = function (optionsMember) {
-                loadMembersData();
+                localDB.updateIndexedDBData(APP.DB.DOCUMENT, 'readwrite', optionsMember)
+                    .done(function () {
+                        loadMembersData();
+                        Materialize.toast('Updated, Member.', 3000, 'rounded');
+                    })
+                    .fail(function () {
+                        Materialize.toast('Fail, dni must be unique.', 3000, 'rounded');
+                    })
+                    .progress(notifyProggress);
             },
             // load data from one object of document into form widget
             loadFormMemberData = function (indexObject) {
-                localDB.getIndexedDBData('teamMembers', 'readonly', indexObject)
+                localDB.getIndexedDBData(APP.DB.DOCUMENT, 'readonly', indexObject)
                     .done(function (dataMember) {
                         resetFormStatus('wrapper__edit-member', ['wrapper__insert-member']);
                         formWidget.changeMemberData = dataMember;
@@ -63,12 +88,8 @@
                     })
                     .fail(function () {
                         Materialize.toast('Fail, could not get data.', 3000, 'rounded');
-                    });
-            },
-            // initialize active database
-            openMemberDatabase = function () {
-                localDB.openIndexedDBDatabase('corporation', 1, widgetTeamMember.getDocumentData('teamMembers'))
-                    .done(loadMembersData);
+                    })
+                    .progress(notifyProggress);
             },
             // validate form input before insert or update member
             isCustomValidateForm = function () {
@@ -93,6 +114,21 @@
                     charge: $formMemberCharge.find(':selected').text(),
                     birthdate: $formMemberBirthdate.val()
                 };            
+            },
+            notifyProggress = function (msg, type) {
+                switch(type || '') {
+                    case 'info':
+                        console.info(msg);
+                        break;
+                    case 'error':
+                        console.error(msg);
+                        break;
+                    case 'warn':
+                        console.warn(msg);
+                        break;
+                    default:
+                        console.log(msg);
+                }
             };
              
         widgetTeamMember.initDomElements(

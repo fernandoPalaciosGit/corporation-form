@@ -25,11 +25,11 @@
                 text : 'Dni Not real.'
             }
         };
-    
+        
         /**
          * Indexed DB options Databes required
          */
-        var _documentsData = {
+        var _documentsData = {            
             'teamMembers' : {
                 name : 'teamMembers',
                 options: {

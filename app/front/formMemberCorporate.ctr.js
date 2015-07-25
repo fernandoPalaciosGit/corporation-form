@@ -144,7 +144,10 @@
             /* CONTEXT : window.APP */
             this.widgetTeamMember.initDomElements('.datepicker', '.js-control-team-charge');
             this.formWidget.setFormMessages(this.widgetTeamMember.getMessageValidation());
-            
+            this.openMemberDatabase();
+        },
+        listenUIActions : function () {
+            /* CONTEXT : window.APP */
             this.formWidget.$form
                 .on('submit', function (ev) {
                     ev.preventDefault(); // prevent redirect
@@ -190,10 +193,11 @@
                 var indexObject = ev.currentTarget.dataset.indexeddbIndex;
                 this.loadFormMemberData(indexObject);
             }, this));
-            
-            this.openMemberDatabase();
-        }
+        },
     };
     
-    $(d).ready($.proxy(APP.initialize, APP));
+    $(d).ready(function () {
+        APP.initialize();
+        APP.listenUIActions();    
+    });
 }(jQuery, window, document, IndexedDB, FormValidation, Materialize, inserTeamMemberFactory));

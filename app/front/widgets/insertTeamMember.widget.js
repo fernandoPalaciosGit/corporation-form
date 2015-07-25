@@ -50,14 +50,7 @@
             TEXT: 'text'
         };
                 
-        var initDomElements = function (triggerWidget, datepicker, selectCharge) {
-            $(triggerWidget).leanModal({
-                dismissible: true,
-                opacity: 0.5,
-                in_duration: 300,
-                out_duration: 200,
-            });
-            
+        var initDomElements = function (datepicker, selectCharge) {
             // load widget controls
             $(datepicker).pickadate({
                 selectMonths: true,

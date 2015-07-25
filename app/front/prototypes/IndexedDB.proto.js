@@ -147,6 +147,24 @@
         return defer.promise();
     };
     
+    w.IndexedDB.prototype.removeIndexedDBData = function (docName, accessType, indexObject) {
+        var defer = $.Deferred(),
+            transactionDB = this.getActiveDb().transaction([docName], accessType),
+            deleteRequest = transactionDB.objectStore(docName).delete(parseInt(indexObject, 10));
+            
+        transactionDB.oncomplete = function () {
+            defer.resolve();
+        };
+        
+        deleteRequest.onerror = function (ev) {
+            var error = ev.target.error;
+            defer.notify(['Error deleteing data', error.name, error.message].join(' -> '), 'error');
+            defer.reject();
+        };
+                    
+        return defer.promise();
+    };
+        
     w.IndexedDB.prototype.updateIndexedDBData = function (docName, accessType, optionsMember) {
         var defer = $.Deferred(),
             indexObject = parseInt(optionsMember.primaryKey, 10),

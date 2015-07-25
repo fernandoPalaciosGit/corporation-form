@@ -18,6 +18,7 @@
             widgetTeamMember = APP.widgetTeamMember,
             $widgetSuscribeMember = $('#widget-suscribe-member'),
             $undoModified = $widgetSuscribeMember.find('.js-submit-edit-cancel-member'),
+            $removeMember = $widgetSuscribeMember.find('.js-modal-remove-member'),
             // FORM CONTROL ELEMENTS
             $tableMembers = $widgetSuscribeMember.find('.js-table-members'),
             $formMemberDni = $widgetSuscribeMember.find('.js-control-team-dni'),
@@ -53,7 +54,7 @@
                         Materialize.toast('Fail, Cannot connect your Database.', 3000, 'rounded');
                     })
                     .always(function () {
-                        resetFormStatus('wrapper__insert-member', ['wrapper__edit-member']);
+                        $undoModified.trigger('click');
                     })
                     .progress(notifyProggress);
             },
@@ -62,7 +63,7 @@
                 localDB.insertIndexedDBData(APP.DB.DOCUMENT, 'readwrite', optionsMember)
                     .done(function () {
                         loadMembersData();
-                        Materialize.toast('Added, new Member.', 3000, 'rounded');
+                        Materialize.toast('Added new Member.', 3000, 'rounded');
                     })
                     .fail(function () {
                         Materialize.toast('Fail, dni must be unique.', 3000, 'rounded');
@@ -73,8 +74,7 @@
                 localDB.updateIndexedDBData(APP.DB.DOCUMENT, 'readwrite', optionsMember)
                     .done(function () {
                         loadMembersData();
-                        formWidget.changeMemberData = null;
-                        Materialize.toast('Updated, Member.', 3000, 'rounded');
+                        Materialize.toast('Updated Member.', 3000, 'rounded');
                     })
                     .fail(function () {
                         Materialize.toast('Fail, dni must be unique.', 3000, 'rounded');
@@ -93,6 +93,13 @@
                         Materialize.toast('Fail, could not get data.', 3000, 'rounded');
                     })
                     .progress(notifyProggress);
+            },
+            removeMember = function (indexObject) {
+                localDB.removeIndexedDBData(APP.DB.DOCUMENT, 'readwrite', indexObject)
+                    .done(function () {
+                        loadMembersData();
+                        Materialize.toast('Removed Member.', 3000, 'rounded');
+                    });
             },
             // validate form input before insert or update member
             isCustomValidateForm = function () {
@@ -134,10 +141,7 @@
                 }
             };
              
-        widgetTeamMember.initDomElements(
-            '.js-modal-remove-member-trigger, .js-modal-error-trigger',
-            '.datepicker',
-            '.js-control-team-charge');
+        widgetTeamMember.initDomElements('.datepicker', '.js-control-team-charge');
         formWidget.setFormMessages(widgetTeamMember.getMessageValidation());
         formWidget.$form
             .on('submit', function (ev) {
@@ -164,6 +168,9 @@
             formWidget.changeMemberData = null;
             resetFormStatus('wrapper__insert-member', ['wrapper__edit-member']);
             formWidget.$modalRemove.closeModal();
+        });
+        $removeMember.on('click', function () {
+            removeMember(formWidget.changeMemberData.primaryKey);
         });
         $tableMembers.find('tbody').on('click', 'tr', function () {
             var indexObject = this.dataset.indexeddbIndex;

@@ -92,7 +92,7 @@
     };
     
     /**
-     * [changeInputStyleState description]
+     * force state input styles
      * @param  {jQuery, string} input form control
      * @param  {Boolean, Null} isValid change style state by css class, null means disabled state
      */

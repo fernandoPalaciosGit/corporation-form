@@ -50,13 +50,14 @@
         return this.activeDB.result;
     };
     
-    w.IndexedDB.prototype.loadIndexedDBData = function (docName, accessType) {
+    w.IndexedDB.prototype.loadIndexedDBData = function (docName, accessType, index) {
         var defer = $.Deferred(),
+            recordCursor = [],
             transactionDB = this.getActiveDb().transaction([docName], accessType),
             documentDB = transactionDB.objectStore(docName),
-            recordCursor = [];
-        
-        documentDB.openCursor().onsuccess = function (e) {
+            documentDBIndexed = (!index) ? documentDB : documentDB.index(index);
+         
+        documentDBIndexed.openCursor().onsuccess = function (e) {
             var cursor = e.target.result;
             
             if (!!cursor) {
@@ -205,5 +206,5 @@
         };
             
         return defer.promise();
-    };
+    };    
 }(jQuery, window));

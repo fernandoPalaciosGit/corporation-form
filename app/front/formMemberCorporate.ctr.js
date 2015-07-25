@@ -31,6 +31,13 @@
             this.selectors.$formMemberCharge.prop('selectedIndex', 0).material_select();
             this.formWidget.changeInputStyleState('.js-control-form:input', null);
         },
+        resetOrderStatus : function (el) {
+            var elUnOrdered = this.selectors.$orderMembers.find('.material-icons'),
+                elOrdered = $(el).find('.material-icons');
+
+            this.widgetTeamMember.changeWidgetDomState(elUnOrdered, 'icon-up', ['icon-down', 'icon-up']);
+            this.widgetTeamMember.changeWidgetDomState(elOrdered, 'icon-down', ['icon-down', 'icon-up']);
+        },
         // initialize active database
         openMemberDatabase : function () {
             this.localDB.openIndexedDBDatabase(
@@ -99,6 +106,12 @@
                 .done($.proxy( function () {
                     this.loadMembersData();
                     Materialize.toast('Removed Member.', 3000, 'rounded');
+                }, this));
+        },
+        orderMemberData : function (indexDocument) {
+            this.localDB.loadIndexedDBData(this.DB.DOCUMENT, 'readonly', indexDocument)
+                .done($.proxy( function (data) {
+                    this.widgetTeamMember.refreshTableWidget(this.selectors.$tableMembers, data)
                 }, this));
         },
         // validate form input before insert or update member
@@ -175,6 +188,7 @@
                 this.formWidget.changeMemberData = null;
                 this.resetFormStatus('wrapper__insert-member', ['wrapper__edit-member']);
                 this.formWidget.$modalRemove.closeModal();
+                this.resetOrderStatus('');
             }, this));
             
             this.selectors.$removeMember.on('click', $.proxy( function () {
@@ -184,9 +198,8 @@
             this.selectors.$orderMembers.on('click', $.proxy( function (ev) {
                 var dataField = ev.currentTarget.dataset.field,
                     indexField = this.widgetTeamMember.getDocumentData(this.DB.DOCUMENT).fields[dataField][0];
-                console.log('Order index : ' + indexField);
-                // resetOrderStatus(ev.currentTarget);
-                // orderMemberData(indexField);
+                this.resetOrderStatus(ev.currentTarget);
+                this.orderMemberData(indexField);
             }, this));
             
             this.selectors.$tableMembers.find('tbody').on('click', 'tr', $.proxy( function (ev) {

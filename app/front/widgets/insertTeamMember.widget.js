@@ -52,9 +52,10 @@
                 
         var initDomElements = function (triggerWidget, datepicker, selectCharge) {
             $(triggerWidget).leanModal({
-              dismissible: false,
-              in_duration: 300,
-              out_duration: 200
+                dismissible: true,
+                opacity: 0.5,
+                in_duration: 300,
+                out_duration: 200,
             });
             
             // load widget controls

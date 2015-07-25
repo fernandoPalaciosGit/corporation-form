@@ -6,6 +6,10 @@
     font-size: 3.56rem;
 }
 
+.text-capitalize {
+    text-transform: capitalize; 
+}
+
 .modal .modal-footer {
   height: auto;
 }

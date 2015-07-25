@@ -63,14 +63,19 @@
             
             <div class="row widget-item__insert-member">
                 <div class="input-field col s12 center-align">
-                    <a class="btn waves-effect waves-light js-submit-insert-member">Incorporate member</a>
+                    <a class="btn waves-effect waves-light text-capitalize js-submit-insert-member">Incorporate member</a>
                 </div>
             </div>
             
             <div class="row widget-item__edit-member">
-                <div class="input-field col s12 center-align">
-                    <a class="waves-effect waves-teal btn-flat js-submit-edit-cancel-member">Cancel</a>
-                    <a class="btn waves-effect waves-light js-submit-edit-save-member">Save</a>
+                <div class="input-field col s12 center-align"> 
+                    <a class="waves-effect waves-grey btn-flat text-capitalize js-submit-edit-cancel-member">Cancel</a>
+                    <a class="teal-text waves-effect waves-teal btn-flat js-submit-edit-save-member">
+                        <i class="material-icons small">done</i>
+                    </a>
+                    <a class="red-text waves-effect waves-red btn-flat js-submit-edit-remove-member">
+                        <i class="material-icons small">delete</i>
+                    </a>
                 </div>
             </div>
         </form>
@@ -99,6 +104,7 @@
         </div>    
     </div>
     
+    <!-- Advise Error validation -->
     <!-- Modal Trigger -->
     <a  class="waves-effect waves-light btn modal-trigger hide js-modal-error-trigger"
         href="#modal-error-widget">Modal</a>
@@ -110,6 +116,23 @@
         </div>
         <div class="modal-footer">
             <ul class="collection list-errors"></ul>
+        </div>
+    </div>
+    
+    <!-- Advise Remove Member -->
+    <!-- Modal Trigger -->
+    <a  class="waves-effect waves-light btn modal-trigger hide js-modal-remove-member-trigger"
+        href="#modal-remove-member-widget">Modal</a>
+
+    <!-- Modal Structure -->
+    <div id="modal-remove-member-widget" class="modal">
+        <div class="modal-content">
+            <h5>¿Remove <span class="member-name"></span> Member?</h5>
+            <p><small>There´s no turning back...</small></p>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="red white-text modal-action modal-close waves-effect waves-red btn-flat">Bugger off!</a>
+            <a class="waves-effect waves-grey btn-flat text-capitalize js-submit-edit-cancel-member">Cancel</a>
         </div>
     </div>
     

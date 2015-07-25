@@ -1,10 +1,16 @@
 ;(function ($, w, d) {
     'use strict';
              
-    w.FormValidation = function (f, m) {
+    w.FormValidation = function (f, m1, m2) {
         this.$form = $(f);
-        this.$modalWidget = $(m);
+        this.$modalWidget = $(m1);
+        this.$modalRemove = $(m2);
         this.changeMemberData = null;
+    };
+    
+    w.FormValidation.prototype.setConfirmationRemove = function (name) {
+        this.$modalRemove.find('.member-name').text(name);
+        this.$modalRemove.openModal();
     };
     
     w.FormValidation.prototype.reset = function () {

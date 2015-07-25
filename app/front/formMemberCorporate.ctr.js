@@ -3,7 +3,7 @@
         
     var APP = {
         localDB : new IndexedDB(),
-        formWidget : new FormValidation('.js-form-new-member', '#modal-error-widget'),
+        formWidget : new FormValidation('.js-form-new-member', '#modal-error-widget', '#modal-remove-member-widget'),
         widgetTeamMember: widgetTeamMember(),
         DB: {
             NAME: 'corporation',
@@ -16,7 +16,9 @@
         var localDB = APP.localDB,
             formWidget = APP.formWidget,
             widgetTeamMember = APP.widgetTeamMember,
-            $widgetSuscribeMember = $('#widget-suscribe-member'), 
+            $widgetSuscribeMember = $('#widget-suscribe-member'),
+            $undoModified = $widgetSuscribeMember.find('.js-submit-edit-cancel-member'),
+            // FORM CONTROL ELEMENTS
             $tableMembers = $widgetSuscribeMember.find('.js-table-members'),
             $formMemberDni = $widgetSuscribeMember.find('.js-control-team-dni'),
             $formMemberName = $widgetSuscribeMember.find('.js-control-team-name'),
@@ -133,7 +135,7 @@
             };
              
         widgetTeamMember.initDomElements(
-            '.js-modal-error-trigger',
+            '.js-modal-remove-member-trigger, .js-modal-error-trigger',
             '.datepicker',
             '.js-control-team-charge');
         formWidget.setFormMessages(widgetTeamMember.getMessageValidation());
@@ -146,18 +148,22 @@
                     insertMemberData(getOptionsMember());    
                 }
             })
-            .on('click', '.js-submit-edit-cancel-member', function () {
-                formWidget.changeMemberData = null;
-                resetFormStatus('wrapper__insert-member', ['wrapper__edit-member']);
-            })
             .on('click', '.js-submit-edit-save-member', function () {
                 var optionsMember = $.extend(true, {}, formWidget.changeMemberData, getOptionsMember()); 
                 if (!$.isEmptyObject(formWidget.changeMemberData) && isCustomValidateForm()) {
                     editMemberData(optionsMember);
                 }
+            })
+            .on('click', '.js-submit-edit-remove-member', function () {
+                formWidget.setConfirmationRemove(formWidget.changeMemberData.name);
             });
         formWidget.$form.find(':input').on('invalid', function (ev) {
             ev.preventDefault(); // prevent show mesage native validity
+        });
+        $undoModified.on('click', function () {
+            formWidget.changeMemberData = null;
+            resetFormStatus('wrapper__insert-member', ['wrapper__edit-member']);
+            formWidget.$modalRemove.closeModal();
         });
         $tableMembers.find('tbody').on('click', 'tr', function () {
             var indexObject = this.dataset.indexeddbIndex;

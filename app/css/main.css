@@ -1,3 +1,4 @@
+/* HELPERS */
 .text-size-h4 {
     font-size: 2.28rem;
 }
@@ -10,20 +11,22 @@
     text-transform: capitalize; 
 }
 
+.icon-down {
+    transform: rotate(90deg);
+}
+
+.icon-up {
+    transform: rotate(-90deg);
+}
+
+/* MODALS */
 .modal .modal-footer {
   height: auto;
 }
 
+/* FORM */
 .invalid {
     border-bottom: 1px solid #F44336 !important;
-}
-
-.arrow-down {
-    transform: rotate(90deg);
-}
-
-.arrow-up {
-    transform: rotate(-90deg);
 }
 
 .js-table-members td{
@@ -34,6 +37,11 @@
     overflow: hidden;
 }
 
+.material-icons {
+  vertical-align: middle;
+}
+
+/* WIDGET STATUS */
 .widget-item__insert-member,
 .widget-item__edit-member {
     display: none;    

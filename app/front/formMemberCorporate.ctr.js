@@ -71,6 +71,7 @@
                 localDB.updateIndexedDBData(APP.DB.DOCUMENT, 'readwrite', optionsMember)
                     .done(function () {
                         loadMembersData();
+                        formWidget.changeMemberData = null;
                         Materialize.toast('Updated, Member.', 3000, 'rounded');
                     })
                     .fail(function () {
@@ -150,11 +151,10 @@
                 resetFormStatus('wrapper__insert-member', ['wrapper__edit-member']);
             })
             .on('click', '.js-submit-edit-save-member', function () {
-                var optionsMember = $.extend({}, formWidget.changeMemberData); 
-                if (!$.isEmptyObject(optionsMember) && isCustomValidateForm()) {
-                    editMemberData(optionsMember);   
+                var optionsMember = $.extend(true, {}, formWidget.changeMemberData, getOptionsMember()); 
+                if (!$.isEmptyObject(formWidget.changeMemberData) && isCustomValidateForm()) {
+                    editMemberData(optionsMember);
                 }
-                formWidget.changeMemberData = null;
             });
         formWidget.$form.find(':input').on('invalid', function (ev) {
             ev.preventDefault(); // prevent show mesage native validity

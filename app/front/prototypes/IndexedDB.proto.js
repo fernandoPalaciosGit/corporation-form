@@ -52,11 +52,11 @@
     
     w.IndexedDB.prototype.loadIndexedDBData = function (docName, accessType) {
         var defer = $.Deferred(),
-            transaction = this.getActiveDb().transaction([docName], accessType),
-            objDocument = transaction.objectStore(docName),
+            transactionDB = this.getActiveDb().transaction([docName], accessType),
+            documentDB = transactionDB.objectStore(docName),
             recordCursor = [];
         
-        objDocument.openCursor().onsuccess = function (e) {
+        documentDB.openCursor().onsuccess = function (e) {
             var cursor = e.target.result;
             
             if (!!cursor) {
@@ -68,11 +68,11 @@
             }
         };
             
-        transaction.oncomplete = function () {
+        transactionDB.oncomplete = function () {
             defer.resolve(recordCursor);
         };
         
-        transaction.onerror = function () {
+        transactionDB.onerror = function () {
             defer.notify(['Error get data', this.error.name, this.error.message].join(' -> '), 'error');
             defer.reject();
         };
@@ -132,31 +132,44 @@
     
     w.IndexedDB.prototype.insertIndexedDBData = function (docName, accessType, optionsMember) {
         var defer = $.Deferred(),
-            transaction = this.getActiveDb().transaction([docName], accessType),
-            putRequest = transaction.objectStore(docName).put(optionsMember);
+            transactionDB = this.getActiveDb().transaction([docName], accessType),
+            addRequest = transactionDB.objectStore(docName).add(optionsMember);
         
-        putRequest.onerror = function () {
+        transactionDB.oncomplete = function () {
+            defer.resolve();
+        };
+
+        addRequest.onerror = function () {
             defer.notify(['Error insert data', this.error.name, this.error.message].join(' -> '), 'error');
             defer.reject();
         };
-        
-        transaction.oncomplete = function () {
-            defer.resolve();
-        };
-        
+                
         return defer.promise();
     };
     
     w.IndexedDB.prototype.updateIndexedDBData = function (docName, accessType, optionsMember) {
-        var defer = $.Deferred();
-        defer.resolve();
+        var defer = $.Deferred(),
+            indexObject = parseInt(optionsMember.primaryKey, 10),
+            transactionDB = this.getActiveDb().transaction([docName], accessType),
+            updateRequest = transactionDB.objectStore(docName).put(optionsMember, indexObject);
+            
+        transactionDB.oncomplete = function () {
+            defer.resolve();
+        };
+        
+        updateRequest.onerror = function (ev) {
+            var error = ev.target.error;
+            defer.notify(['Error update data', error.name, error.message].join(' -> '), 'error');
+            defer.reject();
+        };
+                    
         return defer.promise();
     };
     
     w.IndexedDB.prototype.getIndexedDBData = function (docName, accessType, indexObject) {
         var defer = $.Deferred(),
-            transaction = this.getActiveDb().transaction([docName], accessType),
-            requestObject = transaction.objectStore(docName).get(parseInt(indexObject, 10)),
+            transactionDB = this.getActiveDb().transaction([docName], accessType),
+            requestObject = transactionDB.objectStore(docName).get(parseInt(indexObject, 10)),
             requestResult = null;
             
         requestObject.onsuccess = function () {
@@ -164,11 +177,11 @@
             requestResult.primaryKey = indexObject;
         };
         
-        transaction.oncomplete = function () {
+        transactionDB.oncomplete = function () {
             defer.resolve(requestResult);
         };
         
-        transaction.onerror = function () {
+        transactionDB.onerror = function () {
             defer.notify(['Error get data', this.error.name, this.error.message].join(' -> '), 'error');
             defer.reject();
         };
